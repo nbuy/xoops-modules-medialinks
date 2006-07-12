@@ -1,0 +1,58 @@
+<{if $keypath}>
+<div>
+<a href="index.php"><{$smarty.const._MD_VIEW_TOP}></a>
+<{foreach from=$keypath item=key}>
+&raquo; 
+  <{if $key.keyid==$keyid}>
+    <{$key.name}>
+  <{else}>
+    <a href="index.php?keyid=<{$key.keyid}>"><{$key.name}></a>
+  <{/if}>
+<{/foreach}>
+</div>
+<{/if}>
+
+<{foreach from=$index item=set}>
+
+  <{if empty($set.head.keyid) || $set.head.keyid==$keyid}>
+    <h2><{$set.head.name}></h2>
+  <{else}>
+    <a href="index.php?keyid=<{$set.head.keyid}>"><h2><{$set.head.name}></h2></a>
+  <{/if}>
+
+  <table class="keyset" style="width: 100%; table-layout: fixed;">
+  <tr valign="top"><td>
+  <{foreach from=$set.childs item=child name=set}>
+  <div><a href="index.php?keyid=<{$child.keyid}>"><{$child.name}><{if $child.count!==""}> (<{$child.count}>)<{/if}></a></div>
+  <{if $smarty.foreach.set.last}>
+    <{if $smarty.foreach.set.iteration==1}>
+  </td><td></td><td>
+    <{elseif $smarty.foreach.set.iteration==2}>
+  </td><td>
+    <{/if}>
+  <{elseif ($smarty.foreach.set.iteration)%max(intval(count($set.childs)/3), 1)==0}></td><td>
+  <{/if}>
+  <{/foreach}>
+  </td></tr>
+  </table>
+
+<{/foreach}>
+<{if $count}>
+<h2><{$keyname}></h2>
+<{if $keydesc}><div class="description"><{$keydesc}></div><{/if}>
+<p><b><{$smarty.const._MD_COUNT}></b> <{$count}> [ <a href="list.php?keyid=<{$keyid}>"><{$smarty.const._MD_VIEW_LIST}></a> ]</p>
+
+<{if $pagenav}>
+<div class="pagenav"><{$smarty.const._MD_VIEW_PAGE}> <{$pagenav}></div>
+<{/if}>
+
+<{foreach from=$lists item=ent}>
+  <div><a href="detail.php?mid=<{$ent.mid}><{if $keyid}>&keyid=<{$keyid}><{/if}>"><{$ent.title}></a> (<{$ent.date}>)</div>
+<{/foreach}>
+<{/if}>
+
+<{if $pagenav}>
+<div class="pagenav"><{$smarty.const._MD_VIEW_PAGE}> <{$pagenav}></div>
+<{/if}>
+
+<{include file="db:system_notification_select.html"}>

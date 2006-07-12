@@ -1,0 +1,52 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html languagee="ja">
+<head>
+<title>映像コンテンツモジュール</title>
+<style>
+.outer { background-color: #808080; }
+td,th { padding: 4px; background: #e8e8e8;}
+.head th  { padding: 4px; background: #d0d0d0; }
+.bnf { color: #008000; }
+.note { font-size: 80%; color: #800000; padding: 0.5em;}
+</style>
+</head>
+<body>
+  <h2>コンテンツの管理</h2>
+  
+  <h2>キーワードの管理</h2>
+
+  コンテンツの索引を構成するキーワードの管理を行う。
+  キーワードは、属性を持ったツリー構造で構成され、その関係が相互の制約として働く。
+
+  <h2>フィールドの管理</h2>
+
+  <p>コンテンツには、任意数の付属情報を付加することができる。</p>
+
+  <p>付加情報は、文字列、整数、日付、テキスト、キーワードの5種類
+  のデータ型のいずれかをとり、文字列の場合は長さを 1〜255 で指定
+  する。</p>
+
+  <p>「キーワード」を指定する場合、あらかじめ「キーワードの管理」
+  で作成されたトップレベルのキーワードを指定する。なお、名称を指
+  定しなければ、未割り当てのキーワードを自動的に割り振る。</p>
+
+  <ul>
+    <li>フィールドの名称末尾に "*" をつけると必須項目となります</li>
+  </ul>
+
+  <h2>アクセス数</h2>
+
+  medialinks/track.php を介して参照されたリンクの参照回数を表示する。
+
+  <h2>新規作成</h2>
+
+  新規のコンテンツの入力を行います。
+
+  <h2>一般設定</h2>
+
+  <hr>
+<address>安富 伸浩 &lt;<a href="mailto:nobuhiro.yasutomi@nifty.ne.jp">nobuhiro.yasutomi@nifty.ne.jp</a>&gt;</address>
+マイサイト ユーザーズ <a href="http://mysite.ddo.jp/">http://mysite.ddo.jp/</a><br/>
+$Id: help.html,v 1.1 2006/07/12 16:27:25 nobu Exp $
+</body>
+</html>

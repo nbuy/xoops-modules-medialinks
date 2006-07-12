@@ -1,0 +1,22 @@
+<{if $keypath}>
+<div>
+<a href="index.php"><{$smarty.const._MD_VIEW_TOP}></a>
+<{foreach from=$keypath item=key}>
+&raquo; <a href="index.php?keyid=<{$key.keyid}>"><{$key.name}></a>
+<{/foreach}>
+</div>
+<{/if}>
+
+<{if $pagenav}>
+<div class="pagenav"><{$smarty.const._MD_VIEW_PAGE}> <{$pagenav}></div>
+<{/if}>
+
+<{foreach from=$list item=fields}>
+<{include file="db:medialinks_item.html"}>
+<{/foreach}>
+
+<{if $pagenav}>
+<div class="pagenav"><{$smarty.const._MD_VIEW_PAGE}> <{$pagenav}></div>
+<{/if}>
+
+<{include file="db:system_notification_select.html"}>

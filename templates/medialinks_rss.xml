@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" version="2.0">
+    <channel>
+        <title><{$config.sitename}></title>
+        <link><{$xoops_url}>/</link>
+        <description><{$config.slogan}></description>
+        <language>ja</language>
+        <copyright><{$config.sitename}></copyright>
+        <webMaster><{$config.adminmail}></webMaster>
+        <managingEditor><{$config.sitename}></managingEditor>
+        <pubDate><{$pubdate}></pubDate>
+        <generator><{$xoops_version}></generator>
+        <itunes:author><{$config.sitename}></itunes:author>
+        <itunes:keywords></itunes:keywords>
+        <itunes:subtitle><{$config.slogan}></itunes:subtitle>
+        <itunes:summary></itunes:summary>
+        <itunes:owner>
+            <itunes:name><{$config.sitename}></itunes:name>
+        </itunes:owner>
+        <itunes:block>no</itunes:block>
+        <itunes:category text="Politics"/>
+        <lastBuildDate><{$builddate}></lastBuildDate>
+<{foreach from=$items item=item}>
+        <item>
+            <title><{$item.title}></title>
+            <description><{$item.description|escape}></description>
+            <link><{$item.url}></link>
+            <enclosure url="<{$item.url}>" type="<{$item.mimetype}>"/>
+            <author><{$config.sitename}></author>
+            <pubDate><{$item.pubdate}></pubDate>
+            <guid><{$item.url}></guid>
+            <itunes:author><{$config.sitename}></itunes:author>
+            <itunes:keywords></itunes:keywords>
+            <itunes:subtitle><{$item.item_title}></itunes:subtitle>
+            <itunes:summary><{$item.description|escape}></itunes:summary>
+            <itunes:block>no</itunes:block>
+        </item>
+<{/foreach}>
+    </channel>
+</rss>

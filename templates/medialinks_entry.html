@@ -1,0 +1,222 @@
+<{if $fields}><{include file="db:medialinks_item.html"}><{/if}>
+
+<h2><{$lang_title}></h2>
+
+<form method="post" name="mediaform" onsubmit="return xoopsFormValidate_mediaform();">
+<input type="hidden" name="mid" value="<{$form.mid}>"/>
+<table cellspacing="1" cellpadding="2" border="0" class="outer">
+<{foreach from=$form item=ele}>
+<{if is_array($ele)}>
+<tr class="<{cycle values="even, odd"}>">
+  <th><{$ele.label}></th>
+  <td>
+<{if isset($ele.input)}>
+    <{$ele.input}>
+<{elseif $ele.type=="link"}>
+   <table cellspacing="0" cellpadding="1">
+     <tr>
+       <th nowrap><{$smarty.const._MD_DEL}></th>
+       <th><{$smarty.const._MD_URL}></th>
+       <th><{$smarty.const._MD_TITLE}></th>
+       <th><{$smarty.const._MD_WEIGHT}></th>
+     </tr>
+   <{foreach from=$ele.value item=link key=n}>
+     <tr>
+       <td align="center">
+         <input type="hidden" name="linkid[<{$n}>]" value="<{$link.linkid}>"/>
+         <{if $link.linkid}><input type="checkbox" name="dellink[<{$n}>]" value="<{$link.linkid}>"/><{else}><{$smarty.const._MD_NEW}><{/if}>
+       </td>
+       <td><input name="linkurl[<{$n}>]" size="30" maxlength="255" value="<{$link.url}>"/></td>
+       <td><input name="linkname[<{$n}>]" size="20" maxlength="128" value="<{$link.name}>"/><input type="hidden" name="linkgrp[<{$n}>]" value="<{$ele.name}>"/></td>
+       <td><input name="linkord[<{$n}>]" size="2" value="<{$link.weight}>"/></td>
+     </tr>
+   <{/foreach}>
+   </table>
+<{elseif $ele.type=="integer"}>
+    <input name="<{$ele.name}>" size="4" value="<{$ele.value}>"/>
+<{elseif $ele.type=="date"}>
+  <input name="<{$ele.name}>" id="<{$ele.name}>" size="12" value="<{$ele.value}>"/>
+<script language="javascript"><!-- 
+document.write('<input type="button" value="<{$smarty.const._MD_CAL_BUTTON}>" onClick="showCalendar(\'<{$ele.name}>\')">');
+-->
+</script>
+<{else}>
+    <input name="<{$ele.name}>" size="<{if $ele.size<60}><{$ele.size}><{else}>60<{/if}>" maxlength="<{$ele.size}>" value="<{$ele.value|escape}>"/>
+<{/if}>
+<{if $ele.option}>
+    <{$ele.option}>
+<{/if}>
+  </td>
+</tr>
+<{/if}>
+<{/foreach}>
+<tr class="<{cycle values="even, odd"}>">
+  <th></th>
+  <td>
+    <input type="submit" name="preview" value="<{$smarty.const._MD_PREVIEW}>"/>
+    <input type="submit" name="save" value="<{$smarty.const._MD_SAVE}>"/>
+  </td>
+</tr>
+</table>
+</form>
+
+
+<link rel="stylesheet" type="text/css" media="all" href="<{$xoops_url}>/include/calendar-blue.css" />
+
+<!-- for DHTML calendar -->
+<script type="text/javascript" src="<{$xoops_url}>/include/calendar.js"></script>
+<script type="text/javascript">
+<!--
+function xoopsFormValidate_mediaform() {
+    myform = window.document.mediaform;
+<{foreach from=$check key=name item=msg}>
+if ( myform.<{$name}>.value == "" ) { window.alert("<{$msg}>"); myform.<{$name}>.focus(); return false; }
+<{/foreach}>
+return true;
+}
+
+// relation keyword sets
+var relays = new Array();
+<{foreach from=$relays key=id item=rel}>
+relays["<{$id}>"] = new Array(<{$rel.keyid}>,<{$rel.root}>,
+    <{$rel.values}>,
+    <{$rel.labels}>);
+<{/foreach}>
+var dests = new Array();
+<{foreach from=$dests key=id item=val}>
+dests["<{$id}>"] = <{$val}>;
+<{/foreach}>
+
+var initid = <{$initid}>;
+for (i in initid) {
+    obj = xoopsGetElementById('keywords['+initid[i]+']');
+    changeKeyword(obj);
+}
+
+// keywords support
+function changeKeyword(obj) {
+  var keys = obj.value.split(',');
+  var found = false;
+  for (i in keys) {
+    for (kid in relays) {
+      if (relays[kid][0]==keys[i]) {
+	var ele = xoopsGetElementById('keywords['+relays[kid][1]+']');
+	values=relays[kid][2];
+	texts=relays[kid][3];
+	var def = ele.value;
+	ele.options.length = values.length+1;
+	var idx = 0;
+	for (n=0; n<values.length; n++) {
+	   ele.options[n+1].value = values[n];
+	   ele.options[n+1].text = texts[n];
+	   if (values[n]==def) idx=n+1;
+	}
+	ele.selectedIndex = idx;
+        found = true;
+      }
+    }
+  }
+  if (!found) {		// force clear when not found
+    var id = obj.name.slice(9, -1);
+    if (dests[id]) {
+      dest = dests[id];
+      for (i in dest) {
+	  var ele = xoopsGetElementById('keywords['+dest[i]+']');
+	  if (ele) ele.options.length = 1;
+      }
+    }
+  }
+}
+
+// calernder section
+var calendar = null;
+
+function selected(cal, date) {
+  cal.sel.value = date;
+}
+
+function closeHandler(cal) {
+  cal.hide();
+  Calendar.removeEvent(document, "mousedown", checkCalendar);
+}
+
+function checkCalendar(ev) {
+  var el = Calendar.is_ie ? Calendar.getElement(ev) : Calendar.getTargetElement(ev);
+  for (; el != null; el = el.parentNode)
+    if (el == calendar.element || el.tagName == "A") break;
+  if (el == null) {
+    calendar.callCloseHandler(); Calendar.stopEvent(ev);
+  }
+}
+function showCalendar(id) {
+  var el = xoopsGetElementById(id);
+  if (calendar != null) {
+    calendar.hide();
+  } else {
+    var cal = new Calendar(<{if $smarty.const._MD_CAL_MONDAY_FIRST}>true<{else}>false<{/if}>, <{if $jstime}><{$jstime}><{else}>'null'<{/if}>, selected, closeHandler);
+    calendar = cal;
+    cal.setRange(<{$calrange[0]}>, <{$calrange[1]}>);
+    calendar.create();
+  }
+  calendar.sel = el;
+  calendar.parseDate(el.value);
+  calendar.showAtElement(el);
+  Calendar.addEvent(document, "mousedown", checkCalendar);
+  return false;
+}
+
+Calendar._DN = new Array
+<{if $weekname}>
+("<{$weekname.Sun}>", "<{$weekname.Mon}>", "<{$weekname.Tue}>",
+ "<{$weekname.Wed}>", "<{$weekname.Thu}>", "<{$weekname.Fri}>",
+ "<{$weekname.Sat}>", "<{$weekname.Sun}>");
+<{else}>
+("Sun", "Mon", "Tue", "Wed", "Thu", "Fri","Sat", "Sun");
+<{/if}>
+
+Calendar._MN = new Array
+<{if $monthname}>
+(<{foreach from=$monthname item=month}>"<{$month}>",<{/foreach}>"");
+<{else}>
+("Jan", "Feb", "Mar", "Apr", "May", "Jun",
+ "Jul", "Aug", "Sep", "Oct", "Nov", "Dec");
+<{/if}>
+
+Calendar._TT = {};
+<{if $calsetting}>
+Calendar._TT["TOGGLE"] = "<{$calsetting._CAL_TGL1STD}>";
+Calendar._TT["PREV_YEAR"] = "<{$calsetting._CAL_PREVYR}>";
+Calendar._TT["PREV_MONTH"] = "<{$calsetting._CAL_PREVMNTH}>";
+Calendar._TT["GO_TODAY"] = "<{$calsetting._CAL_GOTODAY}>";
+Calendar._TT["NEXT_MONTH"] = "<{$calsetting._CAL_NXTMNTH}>";
+Calendar._TT["NEXT_YEAR"] = "<{$calsetting._CAL_NEXTYR}>";
+Calendar._TT["SEL_DATE"] = "<{$calsetting._CAL_SELDATE}>";
+Calendar._TT["DRAG_TO_MOVE"] = "<{$calsetting._CAL_DRAGMOVE}>";
+Calendar._TT["PART_TODAY"] = "(<{$calsetting._CAL_TODAY}>)";
+Calendar._TT["MON_FIRST"] = "<{$calsetting._CAL_DISPM1ST}>";
+Calendar._TT["SUN_FIRST"] = "<{$calsetting._CAL_DISPS1ST}>";
+Calendar._TT["CLOSE"] = "<{$calsetting._CLOSE}>";
+Calendar._TT["TODAY"] = "<{$calsetting._CAL_TODAY}>";
+<{else}>
+Calendar._TT["TOGGLE"] = "<{$smarty.const._CAL_TGL1STD}>";
+Calendar._TT["PREV_YEAR"] = "<{$smarty.const._CAL_PREVYR}>";
+Calendar._TT["PREV_MONTH"] = "<{$smarty.const._CAL_PREVMNTH}>";
+Calendar._TT["GO_TODAY"] = "<{$smarty.const._CAL_GOTODAY}>";
+Calendar._TT["NEXT_MONTH"] = "<{$smarty.const._CAL_NXTMNTH}>";
+Calendar._TT["NEXT_YEAR"] = "<{$smarty.const._CAL_NEXTYR}>";
+Calendar._TT["SEL_DATE"] = "<{$smarty.const._CAL_SELDATE}>";
+Calendar._TT["DRAG_TO_MOVE"] = "<{$smarty.const._CAL_DRAGMOVE}>";
+Calendar._TT["PART_TODAY"] = "(<{$smarty.const._CAL_TODAY}>)";
+Calendar._TT["MON_FIRST"] = "<{$smarty.const._CAL_DISPM1ST}>";
+Calendar._TT["SUN_FIRST"] = "<{$smarty.const._CAL_DISPS1ST}>";
+Calendar._TT["CLOSE"] = "<{$smarty.const._CLOSE}>";
+Calendar._TT["TODAY"] = "<{$smarty.const._CAL_TODAY}>";
+<{/if}>
+
+// date formats
+Calendar._TT["DEF_DATE_FORMAT"] = "y-mm-dd";
+Calendar._TT["TT_DATE_FORMAT"] = "y-mm-dd";
+
+Calendar._TT["WK"] = "";
+//-->
+</script>

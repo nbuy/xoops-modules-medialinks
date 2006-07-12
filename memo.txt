@@ -1,0 +1,46 @@
+メディアリンク
+
+■ データモデル
+
+  * 基本コンテンツの保持 - medialinks
+  * 付属するメディアの保存場所を示すリンク情報 - medialinks_attach
+  * 分類情報キーワード (キーワード構造を表現する) - medialinks_keys
+  * キーワードとコンテンツの関連付けを行う - medialinks_relation
+
+  medialinks テーブルには、付加的なユーザ定義フィールドを作成する。
+  (数値 integer or 文字列 varchar を alter table で追加)
+
+  medialinks_keys のフィールド構造
+    keyid  ... uniqid
+    parent ... 階層構造をなす場合の親キーの keyid
+	       0 はトップレベルキーワード
+    name   ... キーワードの表示名称
+    weight ... 並べ替え順を指定する場合の重み
+    description ... キーワードに対する説明文
+
+■ ページ構成
+
+【ユーザ画面】	PHP		TEMPLATE
+  ・表示画面	detail.php	medialinks_detail.html (medidalinks_item.html)
+  ・索引画面	index.php	medialinks_index.html
+
+【担当者画面】
+
+  ・登録画面	entry.php	medialinks_entry.html
+
+【管理画面】
+
+  ・管理画面	admin/index.php
+
+■ 機能
+
+・管理に必要な機能
+・コンテンツの保守
+・キーワードの編集
+・追加フィールドの編集
+・添付ファイルの取り扱い
+
+   作成規則
+     フィールド名 add## に統一
+
+   $content.fieldname.{label,value,size,type,weight}

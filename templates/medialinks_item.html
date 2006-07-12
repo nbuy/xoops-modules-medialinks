@@ -1,0 +1,61 @@
+<{if $fields.detail}>
+<h2><a href="<{$fields.detail}>"><{$fields.title}></a></h2>
+<{else}>
+<h2><{$fields.title}></h2>
+<{/if}>
+<table>
+<tr valign="top">
+  <td width="320" style="text-align: center;">
+  <{if $fields.media.value}>
+  <div class="media">
+<{foreach from=$fields.media.value item=link name=media}>
+<{if $smarty.foreach.media.first}>
+  <{if preg_match("/\\.wmv\$/i", $link.url)}>
+  <embed src="<{$link.url}>" width="320" height="256" alt="<{$link.name}>" autostart="false"/>
+  <{elseif preg_match("/\\.mov\$/", $link.url)}>
+  <embed src="<{$link.url}>" qtsrc="<{$link.url}>" width="320" height="256" controller="true" alt="<{$link.name}>" autoplay="false"/>
+  <{else}>
+   ??? <{$link.url}>
+  <{/if}>
+<br/><br/>
+<{else}>
+   <a href="track.php?lid=<{$link.linkid}>"><{$link.name}></a> 
+<{/if}>
+<{/foreach}>
+  </div>
+  <{else}>
+<img src="images/nodata.png" width="250" height="200" alt="nodata"/>
+  <{/if}>
+  </td>
+  <td>
+    <{foreach from=$fields item=ele}>
+<{if !is_array($ele)}>
+<{elseif $ele.type=="link"}>
+<{if $ele.value}>
+<div><b><{$ele.label}></b>:
+<ul>
+    <{foreach from=$ele.value item=link}>
+    <li><a href="track.php?lid=<{$link.linkid}>" target="_blank"><{$link.name}></a></li>
+    <{/foreach}>
+</ul>
+<{/if}>
+<{else}>
+<div><b><{$ele.label}></b>: <{$ele.value}></div>
+<{/if}>
+    <{/foreach}>
+  </td>
+</tr>
+<tr>
+  <td colspan="2">
+    <{$fields.description}>
+  </td>
+</tr>
+</table>
+<{if $fields.isadmin}>
+<div style="text-align: right;">[ 
+  <a href="entry.php?mid=<{$fields.mid}>"><{$smarty.const._EDIT}></a> 
+<{if $fields.status!='X'}>
+  | <a href="delete.php?mid=<{$fields.mid}>"><{$smarty.const._DELETE}></a>
+<{/if}>
+]</div>
+<{/if}>
