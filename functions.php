@@ -1,6 +1,6 @@
 <?php
 # medialinks common functions
-# $Id: functions.php,v 1.1 2006/07/12 16:27:25 nobu Exp $
+# $Id: functions.php,v 1.2 2006/07/12 18:33:55 nobu Exp $
 
 include_once XOOPS_ROOT_PATH.'/class/xoopsformloader.php';
 
@@ -14,6 +14,18 @@ define('RELAY', $xoopsDB->prefix('medialinks_relation'));
 define('NODE_BOTH', 0);
 define('NODE_CATEGORY', 1);
 define('NODE_KEY', 2);
+
+if(!function_exists("file_get_contents")) {
+   function file_get_contents($filename) {
+       $fp = fopen($filename, "rb");
+       if (!$fp) return false;
+       $contents = "";
+       while (! feof($fp)) {
+	   $contents .= fread($fp, 4096);
+       }
+       return $contents;
+   }
+}
 
 class KeyWords {
     var $keys=array();

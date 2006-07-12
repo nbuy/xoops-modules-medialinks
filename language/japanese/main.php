@@ -1,6 +1,6 @@
 <?php
 # medialinks user side language resources
-# $Id: main.php,v 1.1 2006/07/12 16:27:25 nobu Exp $
+# $Id: main.php,v 1.2 2006/07/12 18:33:55 nobu Exp $
 
 define("_MD_CONTENT_EDIT", "コンテンツの編集");
 define("_MD_CONTENT_NEW", "コンテンツの新規作成");
@@ -18,7 +18,7 @@ define("_MD_TITLE", "名称");
 define("_MD_WEIGHT", "順");
 define("_MD_NEW", "新規");
 define("_MD_SAVE", "保存");
-define("_MD_REQUIRE_INPUT", "「%s」を入力してください");
+define("_MD_REQUIRE_INPUT", "下記の項目は必ず入力してください");
 define("_MD_PREVIEW", "プレビュー");
 define("_MD_DBUPDATED", "データを保存しました");
 define("_MD_DBUPDATE_FAIL", "データの保存に失敗しました");

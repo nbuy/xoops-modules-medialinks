@@ -1,6 +1,6 @@
 <?php
 # medialinks module information
-# $Id: modinfo.php,v 1.1 2006/07/12 16:27:25 nobu Exp $
+# $Id: modinfo.php,v 1.2 2006/07/12 18:33:55 nobu Exp $
 
 define("_MI_MEDIALINKS_NAME", "映像コンテンツ");
 define("_MI_MEDIALINKS_DESC", "ビデオ映像などのコンテンツ情報を閲覧する");
@@ -62,7 +62,7 @@ define("_MI_MEDIALINKS_BLOCK_MODIFY", "更新されたコンテンツ");
 define("_MI_MEDIALINKS_BLOCK_MODIFY_DESC", "更新日付が新しい映像コンテンツを表示する");
 
 // oninstall.php
-define("_MI_CONTENT_TITLE", "表題");
+define("_MI_CONTENT_TITLE", "表題*");
 define("_MI_CONTENT_DESC", "説明文");
 define("_MI_CONTENT_POSTD", "作成日時");
 define("_MI_CONTENT_MODIFY", "更新日時");

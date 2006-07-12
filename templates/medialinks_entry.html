@@ -41,7 +41,7 @@ document.write('<input type="button" value="<{$smarty.const._MD_CAL_BUTTON}>" on
 -->
 </script>
 <{else}>
-    <input name="<{$ele.name}>" size="<{if $ele.size<60}><{$ele.size}><{else}>60<{/if}>" maxlength="<{$ele.size}>" value="<{$ele.value|escape}>"/>
+    <input name="<{$ele.name}>" id="<{$ele.name}>" size="<{if $ele.size<60}><{$ele.size}><{else}>60<{/if}>" maxlength="<{$ele.size}>" value="<{$ele.value|escape}>"/>
 <{/if}>
 <{if $ele.option}>
     <{$ele.option}>
@@ -67,12 +67,23 @@ document.write('<input type="button" value="<{$smarty.const._MD_CAL_BUTTON}>" on
 <script type="text/javascript" src="<{$xoops_url}>/include/calendar.js"></script>
 <script type="text/javascript">
 <!--
+function checkvalue(name) {
+    obj = xoopsGetElementById(name);
+    if (obj) return obj.value == "";
+    return false;
+}
+
 function xoopsFormValidate_mediaform() {
-    myform = window.document.mediaform;
+    var msg = "";
+    
 <{foreach from=$check key=name item=msg}>
-if ( myform.<{$name}>.value == "" ) { window.alert("<{$msg}>"); myform.<{$name}>.focus(); return false; }
+    if ( checkvalue("<{$name}>")) msg += "<{$msg}>\n";
 <{/foreach}>
-return true;
+    if (msg) {
+      alert("<{$smarty.const._MD_REQUIRE_INPUT}>\n"+msg);
+      return false;
+    };
+    return true;
 }
 
 // relation keyword sets

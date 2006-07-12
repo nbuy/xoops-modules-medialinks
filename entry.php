@@ -1,6 +1,6 @@
 <?php
 # Medialinks - contents page entry and edit
-# $Id: entry.php,v 1.1 2006/07/12 16:27:25 nobu Exp $
+# $Id: entry.php,v 1.2 2006/07/12 18:33:55 nobu Exp $
 
 include "../../mainfile.php";
 include_once "functions.php";
@@ -62,7 +62,8 @@ $title = $mid?_MD_CONTENT_EDIT:_MD_CONTENT_NEW;
 $xoopsTpl->assign('xoops_pagetitle', htmlspecialchars($xoopsModule->getVar('name')._MD_SEP.$title));
 $xoopsTpl->assign('lang_title', htmlspecialchars($title));
 
-if (isset($_POST['preview'])) {
+$preview = isset($_POST['preview']);
+if ($preview) {
     $content = new MediaContent(intval($_POST['mid']));
     $content = store_entry($content);
     $xoopsTpl->assign('fields', $content->dispVars(false));
@@ -106,7 +107,7 @@ $linkseq = 0;
 $require = array();
 foreach ($content->getField() as $k=>$field) {
     if (in_array($k, $nop)) continue;
-    if ($mid) $v = $content->getVar($k);
+    if ($mid || $preview) $v = $content->getVar($k);
     else $v = $field['def'];
     $type=$field['type'];
     if (preg_match('/^(\w+)\\((\d+)\\)/', $type, $d)) {
@@ -130,7 +131,7 @@ foreach ($content->getField() as $k=>$field) {
 	}
 	break;
     case 'keywords':
-	if (preg_match('/=(\d+)$/', $field['name'], $d)) {
+	if (preg_match('/\[(\d+)\]$/', $field['name'], $d)) {
 	    $field['input'] = $keywidget[$d[1]];
 	} else {
 	    $field['input'] = '*NONE*';
@@ -165,7 +166,8 @@ foreach ($content->getField() as $k=>$field) {
     }
     if (is_array($field)) $field['value'] = $v;
     if (preg_match('/\\*$/', $field['label'])) {
-	$require[$field['name']] = sprintf(_MD_REQUIRE_INPUT, preg_replace('/\\*$/', '', $field['label']));
+	$rname = $field['name'];
+	$require[$rname] = preg_replace('/\\*$/', '', $field['label']);
     }
     if ($field['weight']) $form[$k] = $field;
 }

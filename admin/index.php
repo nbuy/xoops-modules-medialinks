@@ -1,6 +1,6 @@
 <?php
 # MediaLinks - Administration
-# $Id: index.php,v 1.1 2006/07/12 16:27:25 nobu Exp $
+# $Id: index.php,v 1.2 2006/07/12 18:33:55 nobu Exp $
 
 include '../../../include/cp_header.php';
 include_once '../functions.php';
@@ -444,9 +444,9 @@ function field_update() {
 	if ($type == 'keywords') {
 	    $keys = array();
 	    if (empty($name)) {
-		$res = $xoopsDB->query("SELECT name FROM ".FIELDS." WHERE name like 'keyid=%'");
+		$res = $xoopsDB->query("SELECT name FROM ".FIELDS." WHERE name like 'keywords[%'");
 		while (list($name)=$xoopsDB->fetchRow($res)) {
-		    $keys[] = intval(preg_replace('/^keyid=/', '', $name));
+		    $keys[] = intval(preg_replace('/^keywords\\[/', '', $name));
 		}
 		sort($keys);
 	    }
@@ -457,14 +457,14 @@ function field_update() {
 		if (in_array($id, $keys)) continue; // already use
 		if (empty($label) || $key['name']==$label) {
 		    $label = $key['name'];
-		    $name = 'keyid='.$id;
+		    $name = "keywords[$id]";
 		    break;
 		}
 		if (!$first) $first = $id;
 	    }
 	    if (empty($name)) {
 		if (!$first) return false;	// no more keywords
-		$name = 'keyid='.$first;
+		$name = "keywords[$first]";
 	    }
 	    $fields .= ",name";
 	    $values .= ",'$name'";
