@@ -1,9 +1,10 @@
 <?php
 # medialinks admin language resources
-# $Id: admin.php,v 1.1 2006/07/12 16:27:25 nobu Exp $
+# $Id: admin.php,v 1.2 2006/07/13 08:36:14 nobu Exp $
 
 define("_AM_CONTENTS_ADMIN", "コンテンツの管理");
 define("_AM_CONTENTS_DEL", "コンテンツを削除します");
+define("_AM_CONTENTS_NEW", "コンテンツの新規作成");
 define("_AM_ATTACH_COUNT", "リンク/添付文書数");
 define("_AM_COMMENT_COUNT", "コメントの数");
 define("_AM_PAGE", "ページ");
@@ -60,6 +61,7 @@ define("_AM_TYPE_TEXT", "テキスト");
 define("_AM_TYPE_IMAGE", "画像URL");
 define("_AM_TYPE_KEYWORD", "キーワード");
 define("_AM_TYPE_LINK", "リンク");
+
 global $nodetypes, $status_sel;
 
 $nodetypes_select =

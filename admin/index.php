@@ -1,6 +1,6 @@
 <?php
 # MediaLinks - Administration
-# $Id: index.php,v 1.2 2006/07/12 18:33:55 nobu Exp $
+# $Id: index.php,v 1.3 2006/07/13 08:36:14 nobu Exp $
 
 include '../../../include/cp_header.php';
 include_once '../functions.php';
@@ -12,9 +12,9 @@ $keywords = new KeyWords();
 $field_types = array('varchar'	=> _AM_TYPE_STRING,
 		     'integer'	=> _AM_TYPE_INTEGER,
 		     'date'	=> _AM_TYPE_DATE,
-		     'text'	=> _AM_TYPE_TEXT,
-		     'keywords'	=> _AM_TYPE_KEYWORD);
+		     'text'	=> _AM_TYPE_TEXT);
 $all_types = $field_types;
+$all_types['keywords']	= _AM_TYPE_KEYWORD;
 $all_types['link'] = _AM_TYPE_LINK;
 $all_types['timestamp'] = _AM_TYPE_TIMESTAMP;
 $all_types['user'] = _AM_TYPE_UID;
@@ -56,7 +56,7 @@ if (isset($_POST['keys'])) {
     case 'hide':
 	$res = contents_update_status($op=='conf'?'N':'X');
     default:
-	redirect_result($res, 'index.php?op=list');
+	redirect_result($res, 'index.php');
     }
 }
 
@@ -68,6 +68,7 @@ $keyid = isset($_GET['keyid'])?intval($_GET['keyid']):0;
 
 switch ($op) {
 case 'list':
+default:
     echo "<h2>"._AM_CONTENTS_ADMIN."</h2>\n";
     contents_list();
     break;
@@ -105,7 +106,7 @@ case 'delfield':
     delfield_form($_GET['fid']);
     break;
 
-default:
+case 'about':
     display_lang_file('help.html');
 }
 xoops_cp_footer();
@@ -113,15 +114,6 @@ xoops_cp_footer();
 function contents_list() {
     global $xoopsDB, $xoopsModuleConfig, $keywords, $status_sel;
 
-    /* keywords choice
-    foreach ($keywords->getTree() as $key) {
-	$keys = $keywords->getKeys(array(0,2), $key['child']);
-	$obj = new KeyFormSelect('', 'key['.$key['keyid'].']');
-	array_unshift($keys, array('keyid'=>'', 'name'=>_AM_KEY_NONE));
-	$obj->addOptions($keys);
-	echo htmlspecialchars($key['name']).' '.$obj->render()." &nbsp; ";
-    }
-    */
     $res = $xoopsDB->query("SELECT count(mid) FROM ".MAIN);
     list($n) = $xoopsDB->fetchRow($res);
     $start = isset($_GET['start'])?intval($_GET['start']):0;
@@ -134,7 +126,7 @@ function contents_list() {
     echo "<table width='100%'>\n";
     echo "<tr><td>"._AM_COUNT.' '.$n."</td><td>";
     if ($n>$max) echo _AM_PAGE.' '.$nav->renderNav();
-    echo "</td><td align='right'>[<a href='summary.php?export=csv&type=c'>"._AM_EXPORT_FILE."</a>]</td></tr>\n";
+    echo "</td><td align='center'><a href='../entry.php'>"._AM_CONTENTS_NEW."</a></td><td align='right'>[<a href='summary.php?export=csv&type=c'>"._AM_EXPORT_FILE."</a>]</td></tr>\n";
     echo "</table>\n";
     echo "<form method='POST'>\n";
     echo "<table cellspacing='1' padding='5' class='outer'>\n";
@@ -355,8 +347,14 @@ function field_form($fid=0) {
     $form->addElement(new XoopsFormText(_AM_FIELDS_LABEL, 'label', 40, 40, $vals['label']));
     $fname = $vals['name'];
     if (empty($fname) || preg_match('/^add/', $fname)) {
+	$types = $field_types;
+	if (empty($fname)) {
+	    $types['keywords'] = _AM_TYPE_KEYWORD;
+	} else {
+	    $form->addElement(new XoopsFormLabel(_AM_FIELDS_NAME, $fname));
+	}
 	$type_select = new XoopsFormRadio(_AM_FIELDS_TYPE, 'type', $type);
-	$type_select->addOptionArray($field_types);
+	$type_select->addOptionArray($types);
 	$form->addElement($type_select);
 	$form->addElement(new XoopsFormText(_AM_FIELDS_SIZE, 'size', 4, 4, $size?$size:40));
     } else {
@@ -416,12 +414,12 @@ function field_update() {
 	$size = intval($_POST['size']);
 	if ($type == 'varchar') $type = $type."($size)";
     }
+    if (isset($_POST['def'])) $def = $myts->stripSlashesGPC($_POST['def']);
+    else $def='';
     if ($fid) {			// update
 	$res = $xoopsDB->query('SELECT * FROM '.FIELDS." WHERE fid=".$fid);
 	if (!$res || $xoopsDB->getRowsNum($res)==0) return false;
 	$field = $xoopsDB->fetchArray($res);
-	if (isset($_POST['def'])) $def = $myts->stripSlashesGPC($_POST['def']);
-	else $def='';
 	$update = array();
 	if ($field['label']!=$label) $update[] =  'label='.$xoopsDB->quoteString($label);
 	if ($field['weight']!=$weight) $update[] =  'weight='.$weight;
@@ -439,8 +437,11 @@ function field_update() {
 	}
 	return $res;
     } else {			// new
-	$fields = "label, type, weight";
-	$values = "";
+	$fields = array("label", "type", "def", "weight");
+	$values = array($xoopsDB->quoteString($label),
+			$xoopsDB->quoteString($type),
+			$xoopsDB->quoteString($def), $weight);
+
 	if ($type == 'keywords') {
 	    $keys = array();
 	    if (empty($name)) {
@@ -466,12 +467,11 @@ function field_update() {
 		if (!$first) return false;	// no more keywords
 		$name = "keywords[$first]";
 	    }
-	    $fields .= ",name";
-	    $values .= ",'$name'";
+	    $fields[] = "name";
+	    $values[] = $xoopsDB->quoteString($name);
 	}
-	$values = $xoopsDB->quoteString($label).",".
-	    $xoopsDB->quoteString($type).",".$weight.$values;
-	$res = $xoopsDB->query("INSERT INTO ".FIELDS."($fields) VALUES($values)");
+	$res = $xoopsDB->query("INSERT INTO ".FIELDS."(".join(',',$fields).")
+ VALUES(".join(',',$values).")");
 	if ($res) {
 	    $fid = $xoopsDB->getInsertId();
 	    if ($type == 'keywords') return $fid;

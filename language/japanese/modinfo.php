@@ -1,6 +1,6 @@
 <?php
 # medialinks module information
-# $Id: modinfo.php,v 1.2 2006/07/12 18:33:55 nobu Exp $
+# $Id: modinfo.php,v 1.3 2006/07/13 08:36:14 nobu Exp $
 
 define("_MI_MEDIALINKS_NAME", "映像コンテンツ");
 define("_MI_MEDIALINKS_DESC", "ビデオ映像などのコンテンツ情報を閲覧する");
@@ -13,6 +13,7 @@ define("_MI_MEDIALINKS_ADLIST", "コンテンツの管理");
 define("_MI_MEDIALINKS_ADKEYS", "キーワードの管理");
 define("_MI_MEDIALINKS_ADFIELDS", "フィールドの管理");
 define("_MI_MEDIALINKS_SUMMARY", "アクセス数");
+define("_MI_MEDIALINKS_ABOUT", "MediaLinks について");
 
 // templates
 define("_MI_MEDIALINKS_ITEM_TPL", "コンテンツ表示形式");
@@ -24,20 +25,20 @@ define("_MI_MEDIALINKS_OPERATE_TPL", "コンテンツの操作");
 define("_MI_MEDIALINKS_RSS_TPL", "RSS(iTunes) 形式の配信用");
 
 // Config
-define("_MI_MEDIALINKS_POSTGROUP", "登録を許可するグループ");
-define("_MI_MEDIALINKS_POSTGROUP_DESC", "コンテンツの新規登録や投稿者による編集を許可するグループ");
+define("_MI_MEDIALINKS_POSTGRP", "登録を許可するグループ");
+define("_MI_MEDIALINKS_POSTGRP_DSC", "コンテンツの新規登録や作成者による編集を許可するグループを指定する");
 define("_MI_MEDIALINKS_MAXLIST","一括表示で表示する件数");
-define("_MI_MEDIALINKS_MAXLIST_DESC","画面に表示するコンテンツの最大数を指定する");
+define("_MI_MEDIALINKS_MAXLIST_DSC","一括表示で画面に並べるコンテンツの最大数を指定する");
 define("_MI_MEDIALINKS_MAXROWS","一覧表示で表示する行数");
-define("_MI_MEDIALINKS_MAXROWS_DESC","タイトル一覧を表示するコンテンツの最大数を指定する");
-define("_MI_MEDIALINKS_NOTIFYADMIN","管理者へメール通知行う");
-define("_MI_MEDIALINKS_NOTIFYADMIN_DESC","新規登録などのメール通知を使用する");
-define("_MI_MEDIALINKS_NOTIFYGROUP","管理者グループの指定");
-define("_MI_MEDIALINKS__DESC","通知メールを受け取る管理者グループを指定する");
+define("_MI_MEDIALINKS_MAXROWS_DSC","タイトル一覧を表示するコンテンツの最大数を指定する");
+define("_MI_MEDIALINKS_NOTIFYAD","管理者へメール通知行う");
+define("_MI_MEDIALINKS_NOTIFYAD_DC","新規にコンテンツが登録された場合の管理者グループへメール通知を行う");
+define("_MI_MEDIALINKS_NOTIFYGRP","管理者グループの指定");
+define("_MI_MEDIALINKS_NOTIFYGRP_D","通知メールを受け取る管理者グループを指定する");
 define("_MI_MEDIALINKS_POSTAUTH","コンテンツ掲載には承認が必要");
-define("_MI_MEDIALINKS_POSTAUTH_DESC","新規登録されたコンテンツの掲載には管理者の承認を必要とする");
+define("_MI_MEDIALINKS_POSTAUTH_DC","新規登録されたコンテンツの掲載には管理者の承認を必要とする");
 define("_MI_MEDIALINKS_COMMENT","コメント機能を有効にする");
-define("_MI_MEDIALINKS_COMMENT_DESC","コンテンツに対するコメント機能を有効にする");
+define("_MI_MEDIALINKS_COMMENT_DSC","コンテンツに対するコメント機能を有効にする");
 
 // Notifications
 define('_MI_MEDIALINKS_GLOBAL_NOTIFY', 'モジュール全体');

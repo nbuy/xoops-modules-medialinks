@@ -1,10 +1,10 @@
 <?php
 // MediaLinks - Multimedia Contents Holder Module
-// $Id: xoops_version.php,v 1.1 2006/07/12 16:27:25 nobu Exp $
+// $Id: xoops_version.php,v 1.2 2006/07/13 08:36:14 nobu Exp $
 
 $modversion=array(
     'name'	=> _MI_MEDIALINKS_NAME,
-    'version'	=> 0.90,
+    'version'	=> 0.95,
     'description'=> _MI_MEDIALINKS_DESC,
     'credits'	=> "Nobuhiro Yasutomi",
     'author'	=> "Nobuhiro Yasutomi",
@@ -100,139 +100,53 @@ $modversion['comments']['itemName'] = 'mid';
 $modversion['hasconfig'] = 1;
 $modversion['config'][]=array(
     'name' => 'post_group',
-    'title' => '_MI_MEDIALINKS_POSTGROUP',
-    'description' => '_MI_MEDIALINKS_POSTGROUP_DESC',
+    'title' => '_MI_MEDIALINKS_POSTGRP',
+    'description' => '_MI_MEDIALINKS_POSTGRP_DSC',
     'formtype' => 'group',
     'valuetype' => 'int',
     'default' => XOOPS_GROUP_USERS);
 $modversion['config'][]=array(
     'name' => 'notify_admin',
-    'title' => '_MI_MEDIALINKS_NOTIFYADMIN',
-    'description' => '_MI_MEDIALINKS_NOTIFYADMIN_DESC',
+    'title' => '_MI_MEDIALINKS_NOTIFYAD',
+    'description' => '_MI_MEDIALINKS_NOTIFYAD_DC',
     'formtype' => 'yesno',
     'valuetype' => 'int',
     'default' => 1);
 $modversion['config'][]=array(
     'name' => 'notify_group',
-    'title' => '_MI_MEDIALINKS_NOTIFYGROUP',
-    'description' => '_MI_MEDIALINKS_NOTIFYGROUP_DESC',
+    'title' => '_MI_MEDIALINKS_NOTIFYGRP',
+    'description' => '_MI_MEDIALINKS_NOTIFYGRP_D',
     'formtype' => 'group',
     'valuetype' => 'int',
     'default' => XOOPS_GROUP_ADMIN);
 $modversion['config'][]=array(
     'name' => 'max_list',
     'title' => '_MI_MEDIALINKS_MAXLIST',
-    'description' => '_MI_MEDIALINKS_MAXLIST_DESC',
+    'description' => '_MI_MEDIALINKS_MAXLIST_DSC',
     'formtype' => 'text',
     'valuetype' => 'int',
     'default' => 10);
 $modversion['config'][]=array(
     'name' => 'max_rows',
     'title' => '_MI_MEDIALINKS_MAXROWS',
-    'description' => '_MI_MEDIALINKS_MAXROWS_DESC',
+    'description' => '_MI_MEDIALINKS_MAXROWS_DSC',
     'formtype' => 'text',
     'valuetype' => 'int',
     'default' => 50);
 $modversion['config'][]=array(
     'name' => 'postauth',
     'title' => '_MI_MEDIALINKS_POSTAUTH',
-    'description' => '_MI_MEDIALINKS_POSTAUTH_DESC',
+    'description' => '_MI_MEDIALINKS_POSTAUTH_DC',
     'formtype' => 'yesno',
     'valuetype' => 'int',
     'default' => 0);
 $modversion['config'][]=array(
     'name' => 'use_comment',
     'title' => '_MI_MEDIALINKS_COMMENT',
-    'description' => '_MI_MEDIALINKS_COMMENT_DESC',
+    'description' => '_MI_MEDIALINKS_COMMENT_DSC',
     'formtype' => 'yesno',
     'valuetype' => 'int',
     'default' => 1);
-/*
-$modversion['config'][]=array('name' => 'max_event',
-			      'title' => '_MI_EGUIDE_MAX_EVENT',
-			      'description' => '_MI_EGUIDE_MAX_LISTITEM_DESC',
-			      'formtype' => 'text',
-			      'valuetype' => 'int',
-			      'default' => 10);
-$modversion['config'][]=array('name' => 'show_extents',
-			      'title' => '_MI_EGUIDE_SHOW_EXTENTS',
-			      'description' => '_MI_EGUIDE_SHOW_EXTENTS_DESC',
-			      'formtype' => 'yesno',
-			      'valuetype' => 'int',
-			      'default' => 1);
-$modversion['config'][]=array('name' => 'user_notify',
-			      'title' => '_MI_EGUIDE_USER_NOTIFY',
-			      'description' => '_MI_EGUIDE_USER_NOTIFY_DESC',
-			      'formtype' => 'yesno',
-			      'valuetype' => 'int',
-			      'default' => 1);
-$modversion['config'][]=array('name' => 'member_only',
-			      'title' => '_MI_EGUIDE_MEMBER',
-			      'description' => '_MI_EGUIDE_MEMBER_DESC',
-			      'formtype' => 'yesno',
-			      'valuetype' => 'int',
-			      'default' => 0);
-$modversion['config'][]=array('name' => 'has_confirm',
-			      'title' => '_MI_EGUIDE_ORDERCONF',
-			      'description' => '_MI_EGUIDE_ORDERCONF_DESC',
-			      'formtype' => 'yesno',
-			      'valuetype' => 'int',
-			      'default' => 0);
-$modversion['config'][]=array('name' => 'label_persons',
-			      'title' => '_MI_EGUIDE_LAB_PERSONS',
-			      'description' => '_MI_EGUIDE_LAB_PERSONS_DESC',
-			      'formtype' => 'text',
-			      'valuetype' => 'text',
-			      'default' => '');
-$modversion['config'][]=array('name' => 'close_before',
-			      'title' => '_MI_EGUIDE_CLOSEBEFORE',
-			      'description' => '_MI_EGUIDE_CLOSEBEFORE_DESC',
-			      'formtype' => 'text',
-			      'valuetype' => 'int',
-			      'default' => 60);
-$modversion['config'][]=array('name' => 'expire_after',
-			      'title' => '_MI_EGUIDE_EXPIRE_AFTER',
-			      'description' => '_MI_EGUIDE_EXPIRE_AFTER_DESC',
-			      'formtype' => 'text',
-			      'valuetype' => 'int',
-			      'default' => 60*24);
-$modversion['config'][]=array('name' => 'default_persons',
-			      'title' => '_MI_EGUIDE_PERSONS',
-			      'description' => '_MI_EGUIDE_PERSONS_DESC',
-			      'formtype' => 'text',
-			      'valuetype' => 'int',
-			      'default' => 10);
-$modversion['config'][]=array('name' => 'date_format',
-			      'title' => '_MI_EGUIDE_DATE_FORMAT',
-			      'description' => '_MI_EGUIDE_DATE_FORMAT_DESC',
-			      'formtype' => 'text',
-			      'valuetype' => 'text',
-			      'default' => _MI_EGUIDE_DATE_FORMAT_DEF);
-$modversion['config'][]=array('name' => 'use_plugins',
-			       'title' => '_MI_EGUIDE_PLUGINS',
-			       'description' => '_MI_EGUIDE_PLUGINS_DESC',
-			       'formtype' => 'yesno',
-			       'valuetype' => 'int',
-			       'default' => 0);
-$modversion['config'][]=array('name' => 'maker_set',
-			      'title' => '_MI_EGUIDE_MARKER',
-			      'description' => '_MI_EGUIDE_MARKER_DESC',
-			      'formtype' => 'textarea',
-			      'valuetype' => 'text',
-			      'default' => _MI_EGUIDE_MARKER_DEF);
-$modversion['config'][]=array('name' => 'time_defs',
-			      'title' => '_MI_EGUIDE_TIME_DEFS',
-			      'description' => '_MI_EGUIDE_TIME_DEFS_DESC',
-			      'formtype' => 'text',
-			      'valuetype' => 'text',
-			      'default' => '');
-$modversion['config'][]=array('name' => 'export_field',
-			      'title' => '_MI_EGUIDE_EXPORT_LIST',
-			      'description' => '_MI_EGUIDE_EXPORT_LIST_DESC',
-			      'formtype' => 'text',
-			      'valuetype' => 'text',
-			      'default' => '*');
-*/
 
 // Notification
 

@@ -1,6 +1,6 @@
 <?php
 # MediaLinks - Summary of Access
-# $Id: summary.php,v 1.1 2006/07/12 16:27:25 nobu Exp $
+# $Id: summary.php,v 1.2 2006/07/13 08:36:14 nobu Exp $
 
 include '../../../include/cp_header.php';
 include_once '../functions.php';
@@ -67,6 +67,7 @@ function links_stat($type) {
     $head = array(_AM_TITLE, _AM_LINKNAME, "URL", _AM_HITS);
     echo "<tr><th>".join("</th><th>", $head)."</th></tr>\n";
     $n = 0;
+    $lmax = 35;
     while ($data = $xoopsDB->fetchArray($res)) {
 	$bg = $n++%2?'even':'odd';
 	$mid = $data['mid'];
@@ -74,8 +75,10 @@ function links_stat($type) {
 	$title = "<a href='../detail.php?mid=$mid'>".htmlspecialchars($data['title'])."</a>";
 	$link = htmlspecialchars($data['name']);
 	$hits = $data['hits'];
+	if (strlen($url)<$lmax) $aname = $url;
+	else $aname = '...'.substr($url, 3-$lmax);
 	echo "<tr class='$bg'><td>$title</td><td>$link</td><td>".
-	    "<a href='$url'>$url</a></td><td align='right'>$hits</td></tr>\n";
+	    "<a href='$url'>".htmlspecialchars($aname)."</a></td><td align='right'>$hits</td></tr>\n";
     }
     echo "</table>\n";
 }

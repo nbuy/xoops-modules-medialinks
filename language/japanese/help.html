@@ -7,16 +7,29 @@
 td,th { padding: 4px; background: #e8e8e8;}
 .head th  { padding: 4px; background: #d0d0d0; }
 .bnf { color: #008000; }
-.note { font-size: 80%; color: #800000; padding: 0.5em;}
+.note { font-size: 80%; padding: 0.5em;}
 </style>
 </head>
 <body>
+<style>
+.note { color: #800000; }
+</style>
   <h2>コンテンツの管理</h2>
-  
+
+  現在保持するコンテンツの一覧を表示する。
+  <p>この管理画面では、コンテンツの表示状態の指定を行う。</p>
+
   <h2>キーワードの管理</h2>
 
   コンテンツの索引を構成するキーワードの管理を行う。
-  キーワードは、属性を持ったツリー構造で構成され、その関係が相互の制約として働く。
+  キーワードは、属性を持ったツリー構造で構成され、
+  その関係が相互の制約として働く。
+  <ul>
+    <li>同じツリーに属する同じレベルのキーワードは排他関係になる</li>
+    <li>連携キーワードを指定すると連携先が指定された場合にのみ選択可能になる</li>
+    <li>連携キーワードは相互に矛盾する指定を行うこともできるが、その場合の動作は保証されない (矛盾しないように設定すること)</li>
+    <li>コンテンツの入力フォームにおいて、JavaScript が有効な場合、連携関係を用いてキーワード選択範囲が絞り込まれる。JavaScriptが無効の場合、動的な絞り込みは行われず、全ての選択肢が選択対象になる。</li>
+  </ul>
 
   <h2>フィールドの管理</h2>
 
@@ -31,22 +44,68 @@ td,th { padding: 4px; background: #e8e8e8;}
   定しなければ、未割り当てのキーワードを自動的に割り振る。</p>
 
   <ul>
-    <li>フィールドの名称末尾に "<b>*</b>" をつけると必須項目となります</li>
+    <li>フィールドの名称末尾に "<b>*</b>" をつけると必須項目となる。
+    必須項目は、入力フォームにおいて JavaScript による確認が行われる。
+    </li>
+    <li>追加部分のデータ形式は、編集画面で後からでも変更できる。
+    ただし、変換方法によっては、データが失われることがあるので注意する。
+    (例: 文字列→整数、文字列長を短くする場合など)
+    </li>
   </ul>
 
   <h2>アクセス数</h2>
 
   medialinks/track.php を介して参照されたリンクの参照回数を表示する。
 
-  <h2>新規作成</h2>
-
-  新規のコンテンツの入力を行います。
-
   <h2>一般設定</h2>
+
+  <blockquote>
+    <table border="0" cellspacing="1" cellpadding="4" class="outer">
+      <tr class="head"><th>項目</th><th>値</th><th>説明</th></tr>
+      <tr class="even">
+        <th align="left">登録を許可するグループ</th>
+        <td>グループ (<u>登録ユーザ</u>)</td>
+	<td>コンテンツの新規登録や作成者による編集を許可するグループを指定する</td>
+      </tr>
+      <tr class="odd">
+        <th align="left">新規登録の際にメールで知らせる</th>
+	<td><u>はい</u>/いいえ</td>
+	<td>新規にイベント案内が掲載された際に通知を行う</td>
+      </tr>
+      <tr class="even">
+        <th align="left">コンテンツ管理者グループ</th>
+	<td>グループ (<u>サイト管理者</u>)</td>
+	<td>通知メールを受け取る管理者グループを指定する</td>
+      </tr>
+      <tr class="odd">
+        <th align="left">一括表示で表示する件数</th>
+	<td>件数 (<u>10</u>)</td>
+	<td>一括表示で画面に並べるコンテンツの最大数を指定する</td>
+      </tr>
+      <tr class="even">
+        <th align="left">一覧表示で表示する行数</th>
+	<td>行数 (<u>50</u>)</td>
+	<td>タイトル一覧を表示するコンテンツの最大数を指定する</td>
+      </tr>
+      <tr class="odd">
+        <th align="left">コンテンツ掲載には承認が必要</th>
+	<td>はい/<u>いいえ</u></td>
+	<td>新規登録されたコンテンツの掲載には管理者の承認を必要とする</td>
+      </tr>
+      <tr class="even">
+        <th align="left">コメント機能を有効にする</th>
+	<td><u>はい</u>/いいえ</td>
+	<td>
+	コンテンツに対するコメント機能を有効にする
+	<p class="note">以下XOOPS の標準のコメント機能に対する設定</p>
+	</td>
+      </tr>
+    </table>
+  </blockquote>
 
   <hr>
 <address>安富 伸浩 &lt;<a href="mailto:nobuhiro.yasutomi@nifty.ne.jp">nobuhiro.yasutomi@nifty.ne.jp</a>&gt;</address>
 マイサイト ユーザーズ <a href="http://mysite.ddo.jp/">http://mysite.ddo.jp/</a><br/>
-$Id: help.html,v 1.2 2006/07/12 18:33:55 nobu Exp $
+$Id: help.html,v 1.3 2006/07/13 08:36:14 nobu Exp $
 </body>
 </html>
