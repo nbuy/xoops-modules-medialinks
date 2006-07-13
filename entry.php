@@ -1,6 +1,6 @@
 <?php
 # Medialinks - contents page entry and edit
-# $Id: entry.php,v 1.2 2006/07/12 18:33:55 nobu Exp $
+# $Id: entry.php,v 1.3 2006/07/13 07:43:00 nobu Exp $
 
 include "../../mainfile.php";
 include_once "functions.php";
@@ -17,8 +17,7 @@ if (!is_object($xoopsUser) ||
 define('MODULE_URL', XOOPS_URL."/modules/".$xoopsModule->getVar('dirname'));
 
 if (isset($_POST['save'])) {
-    $pmid = intval($_POST['mid']);
-    $content = new MediaContent($pmid);
+    $content = new MediaContent(intval($_POST['mid']));
     $stat = $content->getVar('status');
     $content = store_entry($content);
     $mid = $content->store();
@@ -34,9 +33,6 @@ if (isset($_POST['save'])) {
 	}
     }
     if ($mid) {
-	if ($pmid == 0) {
-	    // notify admin
-	}
 	redirect_header('detail.php?mid='.$mid, 1, _MD_DBUPDATED);
     } else {
 	//redirect_header('detail.php?mid='.$mid, 3, _MD_DBUPDATE_FAIL);
