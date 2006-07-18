@@ -1,6 +1,6 @@
 <?php
 # MediaLinks - Administration
-# $Id: index.php,v 1.3 2006/07/13 08:36:14 nobu Exp $
+# $Id: index.php,v 1.4 2006/07/18 18:15:33 nobu Exp $
 
 include '../../../include/cp_header.php';
 include_once '../functions.php';
@@ -25,9 +25,10 @@ if (isset($_POST['keys'])) {
     $myts =& MyTextSanitizer::getInstance();
     $keys = array('name', 'weight', 'description');
     $nodetype = intval($_POST['nodetype']);
-    if ($nodetype != 1) $rel = 0; // only for category
+    $par = intval($_POST['parent']);
+    if ($par == 0) $nodetype = 1; // only for category
     $vals = array('nodetype'=>$nodetype,
-		  'parent'=>intval($_POST['parent']),
+		  'parent'=>$par,
 		  'relay'=>($nodetype!=1)?0:intval($_POST['relay']));
     foreach ($keys as $k) {
 	$vals[$k] = $xoopsDB->quoteString($myts->stripSlashesGPC($_POST[$k]));
