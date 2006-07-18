@@ -1,10 +1,10 @@
 <?php
 // MediaLinks - Multimedia Contents Holder Module
-// $Id: xoops_version.php,v 1.2 2006/07/13 08:36:14 nobu Exp $
+// $Id: xoops_version.php,v 1.3 2006/07/18 17:44:58 nobu Exp $
 
 $modversion=array(
     'name'	=> _MI_MEDIALINKS_NAME,
-    'version'	=> 0.95,
+    'version'	=> 0.96,
     'description'=> _MI_MEDIALINKS_DESC,
     'credits'	=> "Nobuhiro Yasutomi",
     'author'	=> "Nobuhiro Yasutomi",
@@ -46,6 +46,10 @@ $modversion['templates'][]=array('file' => 'medialinks_operate.html',
 				 'description' => _MI_MEDIALINKS_OPERATE_TPL);
 $modversion['templates'][]=array('file' => 'medialinks_rss.xml',
 				 'description' => _MI_MEDIALINKS_RSS_TPL);
+$modversion['templates'][]=array('file' => 'medialinks_track.asx',
+				 'description' => _MI_MEDIALINKS_ASX_TPL);
+$modversion['templates'][]=array('file' => 'medialinks_track.qtl',
+				 'description' => _MI_MEDIALINKS_QTL_TPL);
 // OnInstall - initialize table records
 $modversion['onInstall'] = "oninstall.php";
 

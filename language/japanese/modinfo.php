@@ -1,6 +1,6 @@
 <?php
 # medialinks module information
-# $Id: modinfo.php,v 1.3 2006/07/13 08:36:14 nobu Exp $
+# $Id: modinfo.php,v 1.4 2006/07/18 17:44:58 nobu Exp $
 
 define("_MI_MEDIALINKS_NAME", "映像コンテンツ");
 define("_MI_MEDIALINKS_DESC", "ビデオ映像などのコンテンツ情報を閲覧する");
@@ -13,7 +13,7 @@ define("_MI_MEDIALINKS_ADLIST", "コンテンツの管理");
 define("_MI_MEDIALINKS_ADKEYS", "キーワードの管理");
 define("_MI_MEDIALINKS_ADFIELDS", "フィールドの管理");
 define("_MI_MEDIALINKS_SUMMARY", "アクセス数");
-define("_MI_MEDIALINKS_ABOUT", "MediaLinks について");
+define("_MI_MEDIALINKS_ABOUT", "モジュールについて");
 
 // templates
 define("_MI_MEDIALINKS_ITEM_TPL", "コンテンツ表示形式");
@@ -23,6 +23,8 @@ define("_MI_MEDIALINKS_DETAIL_TPL", "コンテンツの詳細表示");
 define("_MI_MEDIALINKS_LIST_TPL", "コンテンツの一括表示");
 define("_MI_MEDIALINKS_OPERATE_TPL", "コンテンツの操作");
 define("_MI_MEDIALINKS_RSS_TPL", "RSS(iTunes) 形式の配信用");
+define("_MI_MEDIALINKS_ASX_TPL", "WMV(AVI) 形式のリンク起動用");
+define("_MI_MEDIALINKS_QTL_TPL", "QuickTime 形式のリンク起動用");
 
 // Config
 define("_MI_MEDIALINKS_POSTGRP", "登録を許可するグループ");

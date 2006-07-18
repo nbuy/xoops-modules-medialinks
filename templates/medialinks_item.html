@@ -13,7 +13,7 @@
   <{if preg_match("/\\.wmv\$/i", $link.url)}>
   <embed src="<{$link.url}>" width="320" height="256" alt="<{$link.name}>" autostart="false"/>
   <{elseif preg_match("/\\.mov\$/", $link.url)}>
-  <embed src="<{$link.url}>" qtsrc="<{$link.url}>" width="320" height="256" controller="true" alt="<{$link.name}>" autoplay="false"/>
+  <embed src="<{$link.url}>" qtsrc="<{$link.url|replace:'http:':'rtsp:'}>" width="320" height="256" controller="true" alt="<{$link.name}>" autoplay="false"/>
   <{else}>
    ??? <{$link.url}>
   <{/if}>

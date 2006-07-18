@@ -1,8 +1,10 @@
 <?php
 # Medialinks tracking attachment
-# $Id: track.php,v 1.1 2006/07/12 16:27:25 nobu Exp $
+# $Id: track.php,v 1.2 2006/07/18 17:44:58 nobu Exp $
 
 include "../../mainfile.php";
+include_once XOOPS_ROOT_PATH.'/class/template.php';
+
 $lid = isset($_GET['lid'])?intval($_GET['lid']):0;
 $mydirname = basename(dirname(__FILE__));
 if ($lid) {
@@ -26,8 +28,12 @@ if (XOOPS_USE_MULTIBYTES && function_exists('mb_convert_encoding')) {
     }
 }
 
+$tpl = new XoopsTpl();
+$xoopsConfig['generator'] = $mydirname.' '.$xoopsModule->getVar('version');
+$tpl->assign('config', $xoopsConfig);
+$tpl->assign('builddate', formatTimestamp(time(), 'rss'));
+
 if (preg_match('/(iPod|iTunes)/', $name)) {
-    include_once XOOPS_ROOT_PATH.'/class/template.php';
     $cache_id = "$mydirname/track.php?lid=$lid";
     header("Content-Type: text/xml; charset=UTF-8");
     header("Content-Disposition:attachment;filename=\"$mydirname.xml\"");
@@ -35,16 +41,12 @@ if (preg_match('/(iPod|iTunes)/', $name)) {
     header("Pragma: public");
     
     $myts =& MyTextSanitizer::getInstance();
-    $tpl = new XoopsTpl();
     $tpl->xoops_setCaching(2);
     $tpl->xoops_setCacheTime(3600);
     if (true || !$tpl->is_cached('db:medialinks_rss.xml', $cache_id)) {
 	include_once 'functions.php';
-	$xoopsConfig['generator'] = $mydirname.' '.$xoopsModule->getVar('version');
 	$content = new MediaContent($mid);
-	$tpl->assign('config', $xoopsConfig);
 	$tpl->assign('pubdate', formatTimestamp($content->getVar('mtime'), 'rss'));
-	$tpl->assign('builddate', formatTimestamp(time(), 'rss'));
 	$item = $content->dispVars();
 	$item['url'] = $url;
 	$item['item_title'] = htmlspecialchars($name);
@@ -59,32 +61,24 @@ if (preg_match('/(iPod|iTunes)/', $name)) {
     $tpl->template_dir = XOOPS_ROOT_PATH."/modules/$mydirname/templates";
     echo enc($tpl->fetch('db:medialinks_rss.xml', $cache_id), 'UTF-8');
 } elseif (preg_match('/\\.(avi|wmv)$/i', $url)) {
+    $tpl->assign('url', $url);
+    $tpl->assign('mydirname', $mydirname);
+    $tpl->assign('title', $name);
+    $tpl->assign('mid', $mid);
+
     header("Content-Type: video/x-ms-asf; charset=Shift_JIS");
     header("Content-Disposition:attachment;filename=\"$mydirname.asx\"");
     header("Cache-Control: public");
     header("Pragma: public");
-    $out = "<asx version=\"3.0\">\n".
-	"  <Author>".$xoopsConfig['sitename']."</Author>\n".
-	"  <title>".htmlspecialchars($name)."</title>\n".
-	//"  <Copyright>John Smith Publishing Inc.</Copyright>\n".
-	//"  <Abstract>Cafe-Music CD by John Smith and friends</Abstract>\n".
-	"  <moreinfo href=\"".XOOPS_URL."/\"/>\n".
-	"  <entry>\n".
-	//"    <Author>John & Jane Smith</Author>\n".
-	"    <title>".htmlspecialchars($name)."</title>\n".
-	"    <moreinfo href=\"".XOOPS_URL."/modules/$mydirname/detail.php?mid=$mid\"/>\n".
-	"    <ref href=\"".htmlspecialchars($url)."\"/>\n".
-	"  </entry>\n".
-	"</asx>";
-    echo enc($out);
+    echo enc($tpl->fetch('db:medialinks_track.asx'));
 } elseif (preg_match('/\\.mov$/i', $url)) {
+    $tpl->assign('url', $url);
+
     header("Content-Type: application/x-quicktimeplayer");
     header("Content-Disposition:attachment;filename=\"$mydirname.qtl\"");
     header("Cache-Control: public");
     header("Pragma: public");
-    echo '<?xml version="1.0"?>
-<?quicktime type="application/x-quicktime-media-link"?>
-<embed src="'.htmlspecialchars($url).'" />';
+    echo enc($tpl->fetch('db:medialinks_track.qtl'), 'UTF-8');
 } else {
     header("Location: ".$url);
 }
