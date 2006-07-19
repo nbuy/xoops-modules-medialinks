@@ -53,6 +53,29 @@ td,th { padding: 4px; background: #e8e8e8;}
     </li>
   </ul>
 
+  <h2>リンク</h2>
+
+  <p>メディアのリンク/添付ファイルは、基本的には指定した URL の示す
+  ファイルの拡張子やタイトルを使って様々な形式に展開することで表
+  現される。</p>
+
+  <p>track.php 経由でファイルを開く場合、次の条件で特有のファイ
+  ル形式を出力する。</p>
+
+  <dl>
+    <dt><b>iPod</b>/<b>iTunes</b> を名称に指定する</dt>
+    <dd>iTunes 用の RSS 形式 (text/xml) で出力する。<br/>
+    テンプレート名: medialinks_rss.xml</dd>
+    <dt>URL の拡張子が <b>.wmv</b> または <b>avi</b></dt>
+    <dd>Windows Mediaストリーミングファイル (video/x-ms-asf)
+    として出力する。<br/>
+    テンプレート名: medialinks_track.asx</dd>
+    <dt>URL の拡張子が <b>.mov</b></dt>
+    <dd>QuickTime のメタファイル (application/x-quicktimeplayer)
+    として出力する。<br/>
+    テンプレート名: medialinks_track.qtl</dd>
+  </dl>
+
   <h2>アクセス数</h2>
 
   medialinks/track.php を介して参照されたリンクの参照回数を表示する。
@@ -106,6 +129,6 @@ td,th { padding: 4px; background: #e8e8e8;}
   <hr>
 <address>安富 伸浩 &lt;<a href="mailto:nobuhiro.yasutomi@nifty.ne.jp">nobuhiro.yasutomi@nifty.ne.jp</a>&gt;</address>
 マイサイト ユーザーズ <a href="http://mysite.ddo.jp/">http://mysite.ddo.jp/</a><br/>
-$Id: help.html,v 1.3 2006/07/13 08:36:14 nobu Exp $
+$Id: help.html,v 1.4 2006/07/19 17:32:44 nobu Exp $
 </body>
 </html>
