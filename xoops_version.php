@@ -1,10 +1,10 @@
 <?php
 // MediaLinks - Multimedia Contents Holder Module
-// $Id: xoops_version.php,v 1.3 2006/07/18 17:44:58 nobu Exp $
+// $Id: xoops_version.php,v 1.4 2006/07/19 14:14:04 nobu Exp $
 
 $modversion=array(
     'name'	=> _MI_MEDIALINKS_NAME,
-    'version'	=> 0.96,
+    'version'	=> 0.97,
     'description'=> _MI_MEDIALINKS_DESC,
     'credits'	=> "Nobuhiro Yasutomi",
     'author'	=> "Nobuhiro Yasutomi",
