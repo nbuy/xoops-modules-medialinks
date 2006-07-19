@@ -1,6 +1,6 @@
 <?php
 # medialinks common functions
-# $Id: functions.php,v 1.2 2006/07/12 18:33:55 nobu Exp $
+# $Id: functions.php,v 1.3 2006/07/19 14:04:05 nobu Exp $
 
 include_once XOOPS_ROOT_PATH.'/class/xoopsformloader.php';
 
@@ -520,7 +520,7 @@ class MediaContent {
 		$v = $this->getAttach(substr($field['name'], 0, 1));
 		break;
 	    case 'keywords':
-		if (preg_match('/=(\d+)$/', $field['name'], $d)) {
+		if (preg_match('/\\[(\d+)\\]$/', $field['name'], $d)) {
 		    $id = $d[1];
 		    if (empty($keywords)) $keywords = new KeyWords();
 		    $words = $this->find_keylist($id);
