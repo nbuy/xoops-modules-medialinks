@@ -1,0 +1,13 @@
+<asx version="3.0">
+  <Author><{$config.adminmail}></Author>
+  <title><{$config.sitename}></title>
+  <Copyright><{$config.sitename}></Copyright>
+  <Abstract><{$config.slogan}></Abstract>
+  <moreinfo href="<{$xoops_url}>/"/>
+  <entry>
+    <Author></Author>
+    <title><{$title}></title>
+    <moreinfo href="<{$xoops_url}>/modules/<{$mydirname}>/detail.php?mid=<{$mid}>"/>
+    <ref href="<{$url}>"/>
+  </entry>
+</asx>
