@@ -1,6 +1,6 @@
 <?php
 # medialinks common functions
-# $Id: functions.php,v 1.3 2006/07/19 14:04:05 nobu Exp $
+# $Id: functions.php,v 1.4 2006/07/20 06:35:48 nobu Exp $
 
 include_once XOOPS_ROOT_PATH.'/class/xoopsformloader.php';
 
@@ -527,7 +527,7 @@ class MediaContent {
 		    foreach ($words as $k=>$v) {
 			$words[$k] = $v['name'];
 		    }
-		    $v = join(', ',$words);
+		    $v = join(_MD_KEY_SEP,$words);
 		} else {
 		    $v = '';
 		}
@@ -561,6 +561,7 @@ class MediaContent {
 		$v = htmlspecialchars($v);
 	    }
 	    if (is_array($field)) {
+		$field['label'] = preg_replace('/\\*$/', '', $field['label']);
 		if ($field['name'] == 'title') $field = htmlspecialchars($v);
 		else $field['value'] = $v;
 	    }
@@ -609,5 +610,17 @@ function template_dir($file='') {
 	$path = sprintf($dir,'english', '');
     }
     return $path;
+}
+
+function find_root_id($keyid, $dep = false) {
+    global $keywords;
+    $depth = 0;
+    do {
+	$key = $keywords->get($keyid);
+	if (empty($key['parent'])) break;
+	$depth++;
+	$keyid = $key['parent'];
+    } while (!empty($keyid));
+    return $dep?$depth:$keyid;
 }
 ?>
