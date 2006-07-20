@@ -1,6 +1,6 @@
 <?php
 # Medialinks - blocksupport
-# $Id: medialinks_block.php,v 1.1 2006/07/12 16:27:26 nobu Exp $
+# $Id: medialinks_block.php,v 1.2 2006/07/20 06:33:19 nobu Exp $
 
 global $order_items;
 $order_items = array('ctime'=>_BLOCK_SORT_CTIME,
@@ -9,7 +9,7 @@ $order_items = array('ctime'=>_BLOCK_SORT_CTIME,
 
 // options: [0] order, [1] lines, [2] strlen, [3] verb
 function b_medialinks_show($options) {
-    global $xoopsDB, $xoopsUser, $order_items;
+    global $xoopsDB, $xoopsUser, $order_items, $keywords;
     $myts =& MyTextSanitizer::getInstance();
     $dirname = basename(dirname(dirname(__FILE__)));
     $modurl = XOOPS_URL."/modules/$dirname";
@@ -21,12 +21,18 @@ function b_medialinks_show($options) {
     $sql = "SELECT mid, title, description, ctime, mtime, poster, hits FROM ".
 	$xoopsDB->prefix('medialinks')." WHERE status='N' ORDER BY $order DESC";
     $result = $xoopsDB->query($sql, $lines);
-    echo $xoopsDB->error();
+    if (!$result || $xoopsDB->getRowsNum($result)==0) return null;
+
+    $verb = $options[3];
+    if (empty($keywords)) {
+	require_once dirname(dirname(__FILE__))."/functions.php";
+	$keywords = new Keywords();
+    }
 
     $block = array('order'=>$order,
 		   'order_by'=>$order_items[$order],
 		   'lang_more'=>_BLOCK_MEDIALINKS_MORE,
-		   'verbose'=>$options[3],
+		   'verbose'=>$verb,
 		   'dirname'=>$dirname,
 		   'module_url'=>$modurl);
     $contents = array();
@@ -36,6 +42,24 @@ function b_medialinks_show($options) {
 	$myrow['cdate'] = formatTimestamp($myrow['ctime'], _BLOCK_MEDIALINKS_DFMT);
 	$myrow['mdate'] = formatTimestamp($myrow['mtime'], _BLOCK_MEDIALINKS_DFMT);
 	$myrow['uname'] = XoopsUser::getUnameFromId($myrow['poster']);
+
+	// keyword expand
+	$kres = $xoopsDB->query("SELECT keyref FROM ".RELAY." WHERE midref=".$myrow['mid']);
+	$keys = array();
+	foreach ($keywords->getTree() as $key) { // roots order
+	    $keys[$key['keyid']] = array();
+	}
+	while (list($keyid)=$xoopsDB->fetchRow($kres)) {
+	    $root = find_root_id($keyid);
+	    $depth = find_root_id($keyid, true);
+	    $key = $keywords->get($keyid);
+	    $keys[$root][$depth]=$key['name'];
+	}
+	foreach ($keys as $id=>$vals) {
+	    $keys[$id] = join(_BLOCK_MEDIALINKS_SEP, $vals);
+	}
+	$myrow['keywords'] = $keys;
+
 	$contents[] = $myrow;
     }
     $block['contents'] = $contents;
