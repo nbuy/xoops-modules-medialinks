@@ -1,6 +1,6 @@
 <?php
 # Medialinks - blocksupport
-# $Id: medialinks_block.php,v 1.2 2006/07/20 06:33:19 nobu Exp $
+# $Id: medialinks_block.php,v 1.3 2006/07/20 06:49:54 nobu Exp $
 
 global $order_items;
 $order_items = array('ctime'=>_BLOCK_SORT_CTIME,
@@ -53,10 +53,11 @@ function b_medialinks_show($options) {
 	    $root = find_root_id($keyid);
 	    $depth = find_root_id($keyid, true);
 	    $key = $keywords->get($keyid);
-	    $keys[$root][$depth]=$key['name'];
+	    if (!empty($key['keyid'])) $keys[$root][$depth]=$key['name'];
 	}
 	foreach ($keys as $id=>$vals) {
-	    $keys[$id] = join(_BLOCK_MEDIALINKS_SEP, $vals);
+	    if ($vals) $keys[$id] = join(_BLOCK_MEDIALINKS_SEP, $vals);
+	    else unset($keys[$id]);
 	}
 	$myrow['keywords'] = $keys;
 
