@@ -1,6 +1,6 @@
 <?php
 # medialinks user side language resources
-# $Id: main.php,v 1.2 2006/07/12 18:33:55 nobu Exp $
+# $Id: main.php,v 1.3 2006/07/20 06:38:20 nobu Exp $
 
 define("_MD_CONTENT_EDIT", "コンテンツの編集");
 define("_MD_CONTENT_NEW", "コンテンツの新規作成");
@@ -11,6 +11,7 @@ define("_MD_VIEW_TOP", "トップ");
 define("_MD_VIEW_PAGE", "ページ");
 define("_MD_KEY_NONE", "*なし*");
 define("_MD_SEP", " :: ");
+define("_MD_KEY_SEP", " - ");
 define("_MD_COUNT", "件数");
 define("_MD_DEL", "削除");
 define("_MD_URL", "URL");

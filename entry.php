@@ -1,6 +1,6 @@
 <?php
 # Medialinks - contents page entry and edit
-# $Id: entry.php,v 1.3 2006/07/13 07:43:00 nobu Exp $
+# $Id: entry.php,v 1.4 2006/07/20 06:38:20 nobu Exp $
 
 include "../../mainfile.php";
 include_once "functions.php";
@@ -269,16 +269,6 @@ function find_child_id($key) {
 	}
     }
     return $ret;
-}
-
-function find_root_id($keyid) {
-    global $keywords;
-    do {
-	$key = $keywords->get($keyid);
-	if (empty($key['parent'])) break;
-	$keyid = $key['parent'];
-    } while (!empty($keyid));
-    return $keyid;
 }
 
 function keywords_widget(&$ret, &$relays, &$roots) {
