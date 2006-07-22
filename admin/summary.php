@@ -1,6 +1,6 @@
 <?php
 # MediaLinks - Summary of Access
-# $Id: summary.php,v 1.3 2006/07/22 03:15:19 nobu Exp $
+# $Id: summary.php,v 1.4 2006/07/22 03:29:52 nobu Exp $
 
 include '../../../include/cp_header.php';
 include_once '../functions.php';
@@ -122,7 +122,7 @@ function contents_csv() {
 	foreach ($rec as $n) {
 	    $keys = keys_expand($data['mid']);
 	    if (preg_match('/\\[(\\d+)\\]$/', $n, $d)) {
-		$v = $keys[$d[1]];
+		$v = isset($keys[$d[1]])?$keys[$d[1]]:'';
 	    } else {
 		$v = $data[$n];
 	    }
