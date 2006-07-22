@@ -1,0 +1,127 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html languagee="ja">
+<head>
+<title>Media Contents Module</title>
+<style>
+.outer { background-color: #808080; }
+td,th { padding: 4px; background: #e8e8e8;}
+.head th  { padding: 4px; background: #d0d0d0; }
+.bnf { color: #008000; }
+.note { font-size: 80%; padding: 0.5em;}
+</style>
+</head>
+<body>
+<style>
+.note { color: #800000; }
+</style>
+  <h2>Media Contents Management</h2>
+
+  Display list all in this module keep conents.
+  <p>In this page, manipulating contents status.</p>
+
+  <h2>Keywords Management</h2>
+
+  Keywords constract contnets indexes keywords for directory.
+  It organized in tree stracture, defined restraction each other.
+
+  <ul>
+    <li>Keyword exclution each other in same tree.</li>
+    <li>Define relay keyword, It can be sellect when setting relayed keyword.</li>
+    <li>Relation need to be set collect.</li>
+    <li>In contents entry form, enable JavaScript selecting follow relation. Disable JavaScript, expand all of tree keywords</li>
+  </ul>
+
+  <h2>Fields Management</h2>
+
+  <p>Conetnts can be add extra informantion feilds</p>
+
+  <p>Additional fields type are "String", "Integer", "Date", "Text" and "Keywords". String can be set length 1¡Á255 characters.</p>
+
+  <p>When set "Keywords" type, That need to make keywords tree in "Keywords Management" and set to top level keywords(category) name. If not setting or not found name, assign automatic from unused keywords tree.</p>
+
+  <ul>
+    <li>In field name tail added "<b>*</b>"(astarisk), It makes require input.
+    Require field checking in entry form by JavaScript.
+    </li>
+    <li>Additional field can be change type.
+    But, You need consider type casting, that lost information in some condition.
+    (e.g.: strings to integer, strings make short length)
+    </li>
+  </ul>
+
+  <h2>Links</h2>
+
+  <p>Media and Attachiment Documents are expand some tags that sence of URL extention. (see template medialinks_item.html)</p>
+
+  <p>Also open via track.php script, that change output style to change following condition.</p>
+
+  <dl>
+    <dt><b>iPod</b>/<b>iTunes</b> word include in link name</dt>
+    <dd>Output RSS style (for iTunes)<br/>
+    Template: medialinks_rss.xml</dd>
+    <dt>URL extentions are <b>.wmv</b> or <b>.avi</b></dt>
+    <dd>Output Windows Media Streaming file (video/x-ms-asf).<br/>
+    Template: medialinks_track.asx</dd>
+    <dt>URL extentions are <b>.mov</b></dt>
+    <dd>Output QuickTime Meta format (application/x-quicktimeplayer).<br/>
+    Template: medialinks_track.qtl</dd>
+    <dt>Others</dt>
+    <dd>Redirecting setting URL.</dd>
+  </dl>
+
+  <h2>Access Summary</h2>
+
+  Summmary of reference count via medialinks/track.php script.
+
+  <h2>Module Settings</h2>
+
+  <blockquote>
+    <table border="0" cellspacing="1" cellpadding="4" class="outer">
+      <tr class="head"><th>Item</th><th>Value</th><th>Description</th></tr>
+      <tr class="even">
+        <th align="left">Group for allow post</th>
+        <td>Groups (<u>Register Users</u>)</td>
+	<td>Permit for exit and post contents except administrator.</td>
+      </tr>
+      <tr class="odd">
+        <th align="left">Notify Mail to admin group</th>
+	<td><u>Yes</u>/No</td>
+	<td>When add new contents notify to contents admin group</td>
+      </tr>
+      <tr class="even">
+        <th align="left">Contents admin group</th>
+	<td>Groups (<u>Admin</u>)</td>
+	<td>Setting Group that contents administration</td>
+      </tr>
+      <tr class="odd">
+        <th align="left">Maximum count in List</th>
+	<td>Counts (<u>10</u>)</td>
+	<td>List display page displayed contents less than this settings</td>
+      </tr>
+      <tr class="even">
+        <th align="left">Maximum count in Rows</th>
+	<td>Rows (<u>50</u>)</td>
+	<td>Limit of Title entry listings</td>
+      </tr>
+      <tr class="odd">
+        <th align="left">Need Approve</th>
+	<td>Yes/<u>No</u></td>
+	<td>New contenets need approve by contents admin</td>
+      </tr>
+      <tr class="even">
+        <th align="left">Allow comments</th>
+	<td><u>Yes</u>/No</td>
+	<td>
+	Contents can be comment by user.
+	<p class="note">Following XOOPS standard comment settings.</p>
+	</td>
+      </tr>
+    </table>
+  </blockquote>
+
+  <hr>
+<address>Nobuhiro Yasutomi &lt;<a href="mailto:nobuhiro.yasutomi@nifty.ne.jp">nobuhiro.yasutomi@nifty.ne.jp</a>&gt;</address>
+My Site Users <a href="http://mysite.ddo.jp/">http://mysite.ddo.jp/</a><br/>
+$Id: help.html,v 1.1 2006/07/22 05:36:41 nobu Exp $
+</body>
+</html>

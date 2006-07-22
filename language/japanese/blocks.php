@@ -1,5 +1,6 @@
 <?php
-// Blocks
+# Blocks
+# $Id: blocks.php,v 1.3 2006/07/22 05:36:41 nobu Exp $
 define("_BLOCK_SORT_ORDER", "事び界");
 define("_BLOCK_SORT_CTIME", "糠缅泣烧界");
 define("_BLOCK_SORT_MTIME", "构糠泣烧界");

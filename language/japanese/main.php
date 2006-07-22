@@ -1,6 +1,6 @@
 <?php
 # medialinks user side language resources
-# $Id: main.php,v 1.3 2006/07/20 06:38:20 nobu Exp $
+# $Id: main.php,v 1.4 2006/07/22 05:36:41 nobu Exp $
 
 define("_MD_CONTENT_EDIT", "コンテンツの編集");
 define("_MD_CONTENT_NEW", "コンテンツの新規作成");
@@ -27,10 +27,12 @@ define('_MD_CONTENT_STYLE','表示形式');
 define("_MD_CONTENT_DELETE", "このコンテンツを削除します");
 define("_MD_NOTIFY_SUBJECT", "新規コンテンツの登録 - {TITLE}");
 
+global $weekname, $monthname, $edit_style, $status_sel;
+
+// Localization Calender Select Widget
 define("_MD_CAL_MONTH", "%u月");
 define("_MD_CAL_BUTTON", "カレンダ");
 define("_MD_CAL_MONDAY_FIRST", false);
-global $weekname, $monthname, $edit_style, $status_sel;
 $weekname = array('Sun'=>'日', 'Mon'=>'月','Tue'=>'火', 'Wed'=>'水',
 		  'Thu'=>'木','Fri'=>'金', 'Sat'=>'土');
 

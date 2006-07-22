@@ -1,6 +1,6 @@
 <?php
 # medialinks module information
-# $Id: modinfo.php,v 1.4 2006/07/18 17:44:58 nobu Exp $
+# $Id: modinfo.php,v 1.5 2006/07/22 05:36:41 nobu Exp $
 
 define("_MI_MEDIALINKS_NAME", "映像コンテンツ");
 define("_MI_MEDIALINKS_DESC", "ビデオ映像などのコンテンツ情報を閲覧する");
@@ -44,7 +44,7 @@ define("_MI_MEDIALINKS_COMMENT_DSC","コンテンツに対するコメント機能を有効にする"
 
 // Notifications
 define('_MI_MEDIALINKS_GLOBAL_NOTIFY', 'モジュール全体');
-define('_MI_MEDIALINKS_GLOBAL_NOTIFY_DESC', 'イベント案内モジュール全体における通知オプション');
+define('_MI_MEDIALINKS_GLOBAL_NOTIFY_DESC', '映像コンテンツ全体における通知オプション');
 define('_MI_MEDIALINKS_KEYWORD_NOTIFY', '現在のキーワード');
 define('_MI_MEDIALINKS_KEYWORD_NOTIFY_DESC', '指定のキーワードに関連する通知オプション');
 define('_MI_MEDIALINKS_CONTENT_NOTIFY', '表示中のコンテンツ');

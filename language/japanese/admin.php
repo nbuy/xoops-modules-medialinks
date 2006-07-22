@@ -1,6 +1,6 @@
 <?php
 # medialinks admin language resources
-# $Id: admin.php,v 1.2 2006/07/13 08:36:14 nobu Exp $
+# $Id: admin.php,v 1.3 2006/07/22 05:36:41 nobu Exp $
 
 define("_AM_CONTENTS_ADMIN", "コンテンツの管理");
 define("_AM_CONTENTS_DEL", "コンテンツを削除します");
@@ -58,7 +58,6 @@ define("_AM_TYPE_DATE", "日付");
 define("_AM_TYPE_TIMESTAMP", "時刻");
 define("_AM_TYPE_UID", "ユーザID");
 define("_AM_TYPE_TEXT", "テキスト");
-define("_AM_TYPE_IMAGE", "画像URL");
 define("_AM_TYPE_KEYWORD", "キーワード");
 define("_AM_TYPE_LINK", "リンク");
 
