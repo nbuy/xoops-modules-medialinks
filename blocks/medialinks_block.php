@@ -1,6 +1,6 @@
 <?php
 # Medialinks - blocksupport
-# $Id: medialinks_block.php,v 1.4 2006/07/22 03:15:19 nobu Exp $
+# $Id: medialinks_block.php,v 1.5 2006/07/22 03:22:39 nobu Exp $
 
 global $order_items;
 $order_items = array('ctime'=>_BLOCK_SORT_CTIME,
@@ -44,7 +44,7 @@ function b_medialinks_show($options) {
 	$myrow['uname'] = XoopsUser::getUnameFromId($myrow['poster']);
 
 	// keywords expand
-	$myrow['keywords'] = keys_expand($data['mid'], _BLOCK_MEDIALINKS_SEP);
+	$myrow['keywords'] = keys_expand($myrow['mid'], _BLOCK_MEDIALINKS_SEP);
 
 	$contents[] = $myrow;
     }
