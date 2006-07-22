@@ -1,6 +1,6 @@
 <?php
 # medialinks common functions
-# $Id: functions.php,v 1.4 2006/07/20 06:35:48 nobu Exp $
+# $Id: functions.php,v 1.5 2006/07/22 03:15:19 nobu Exp $
 
 include_once XOOPS_ROOT_PATH.'/class/xoopsformloader.php';
 
@@ -622,5 +622,29 @@ function find_root_id($keyid, $dep = false) {
 	$keyid = $key['parent'];
     } while (!empty($keyid));
     return $dep?$depth:$keyid;
+}
+
+function keys_expand($mid, $sep="-") {
+    global $xoopsDB, $keywords;
+    if (empty($keywords)) {
+	require_once dirname(__FILE__)."/functions.php";
+	$keywords = new Keywords();
+    }
+    $kres = $xoopsDB->query("SELECT keyref FROM ".RELAY." WHERE midref=".$mid);
+    $keys = array();
+    foreach ($keywords->getTree() as $key) { // roots order
+	$keys[$key['keyid']] = array();
+    }
+    while (list($keyid)=$xoopsDB->fetchRow($kres)) {
+	$root = find_root_id($keyid);
+	$depth = find_root_id($keyid, true);
+	$key = $keywords->get($keyid);
+	if (!empty($key['keyid'])) $keys[$root][$depth]=$key['name'];
+    }
+    foreach ($keys as $id=>$vals) {
+	if ($vals) $keys[$id] = join($sep, $vals);
+	else unset($keys[$id]);
+    }
+    return $keys;
 }
 ?>

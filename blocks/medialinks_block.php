@@ -1,6 +1,6 @@
 <?php
 # Medialinks - blocksupport
-# $Id: medialinks_block.php,v 1.3 2006/07/20 06:49:54 nobu Exp $
+# $Id: medialinks_block.php,v 1.4 2006/07/22 03:15:19 nobu Exp $
 
 global $order_items;
 $order_items = array('ctime'=>_BLOCK_SORT_CTIME,
@@ -43,23 +43,8 @@ function b_medialinks_show($options) {
 	$myrow['mdate'] = formatTimestamp($myrow['mtime'], _BLOCK_MEDIALINKS_DFMT);
 	$myrow['uname'] = XoopsUser::getUnameFromId($myrow['poster']);
 
-	// keyword expand
-	$kres = $xoopsDB->query("SELECT keyref FROM ".RELAY." WHERE midref=".$myrow['mid']);
-	$keys = array();
-	foreach ($keywords->getTree() as $key) { // roots order
-	    $keys[$key['keyid']] = array();
-	}
-	while (list($keyid)=$xoopsDB->fetchRow($kres)) {
-	    $root = find_root_id($keyid);
-	    $depth = find_root_id($keyid, true);
-	    $key = $keywords->get($keyid);
-	    if (!empty($key['keyid'])) $keys[$root][$depth]=$key['name'];
-	}
-	foreach ($keys as $id=>$vals) {
-	    if ($vals) $keys[$id] = join(_BLOCK_MEDIALINKS_SEP, $vals);
-	    else unset($keys[$id]);
-	}
-	$myrow['keywords'] = $keys;
+	// keywords expand
+	$myrow['keywords'] = keys_expand($data['mid'], _BLOCK_MEDIALINKS_SEP);
 
 	$contents[] = $myrow;
     }
