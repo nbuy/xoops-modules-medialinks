@@ -1,6 +1,6 @@
 <?php
 # Medialinks - module search
-# $Id: search.inc.php,v 1.1 2006/07/12 16:27:26 nobu Exp $
+# $Id: search.inc.php,v 1.2 2006/07/24 02:15:12 nobu Exp $
 
 function medialinks_search($queryarray, $andor, $limit, $offset, $userid){
 	global $xoopsDB;
@@ -26,7 +26,7 @@ function medialinks_search($queryarray, $andor, $limit, $offset, $userid){
 	$i = 0;
  	while($myrow = $xoopsDB->fetchArray($result)){
 		//$ret[$i]['image'] = "images/forum.gif";
-		$ret[$i]['link'] = "detail.php?eid=".$myrow['mid']."";
+		$ret[$i]['link'] = "detail.php?mid=".$myrow['mid']."";
 		$ret[$i]['title'] = htmlspecialchars($myrow['title']);
 		$ret[$i]['time'] = $myrow['ctime'];
 		$ret[$i]['uid'] = $myrow['poster'];
