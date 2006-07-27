@@ -1,6 +1,6 @@
 <?php
 # MediaLinks - Administration
-# $Id: index.php,v 1.4 2006/07/18 18:15:33 nobu Exp $
+# $Id: index.php,v 1.5 2006/07/27 16:03:29 nobu Exp $
 
 include '../../../include/cp_header.php';
 include_once '../functions.php';
@@ -457,8 +457,10 @@ function field_update() {
 	    foreach ($keywords->getTree() as $key) {
 		$id = $key['keyid'];
 		if (in_array($id, $keys)) continue; // already use
+		if (empty($label)) {
+		    $values[0] = $xoopsDB->quoteString($key['name']);
+		}
 		if (empty($label) || $key['name']==$label) {
-		    $label = $key['name'];
 		    $name = "keywords[$id]";
 		    break;
 		}
