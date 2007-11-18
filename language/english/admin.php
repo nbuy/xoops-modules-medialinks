@@ -1,6 +1,6 @@
 <?php
 # medialinks admin language resources
-# $Id: admin.php,v 1.1 2006/07/22 05:36:41 nobu Exp $
+# $Id: admin.php,v 1.2 2007/11/18 05:09:12 nobu Exp $
 
 define("_AM_CONTENTS_ADMIN", "Media Contents Management");
 define("_AM_CONTENTS_DEL", "Delete contents");
@@ -33,7 +33,7 @@ define("_AM_KEYWORDS_DESC", "Comments");
 define("_AM_KEYWORDS_REMOVE", "Delete Keyword");
 define("_AM_KEYWORDS_NODETYPE", "Keyword Types");
 define("_AM_KEYWORDS_COUNT", "Usage this keyword");
-define("_AM_KEYWORDS_PRINT", "Keyword "%s" reference from %u contents");
+define("_AM_KEYWORDS_PRINT", "Keyword \"%s\" reference from %u contents");
 
 define("_AM_SORT_WEIGHT", "Display Order <span class='fontSmall'>(0=invisible)</span>");
 define("_AM_KEY_NONE", "None");
