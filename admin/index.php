@@ -1,6 +1,6 @@
 <?php
 # MediaLinks - Administration
-# $Id: index.php,v 1.5 2006/07/27 16:03:29 nobu Exp $
+# $Id: index.php,v 1.6 2007/11/24 09:49:14 nobu Exp $
 
 include '../../../include/cp_header.php';
 include_once '../functions.php';
@@ -20,6 +20,25 @@ $all_types['timestamp'] = _AM_TYPE_TIMESTAMP;
 $all_types['user'] = _AM_TYPE_UID;
 
 $op = isset($_GET['op'])?$_GET['op']:'';
+
+// altsys support
+if( ! empty( $_GET['lib'] ) ) {
+    global $mydirpath;
+    $mydirpath = dirname(dirname(__FILE__));
+    $mydirname = basename($mydirpath);
+    // common libs (eg. altsys)
+    $lib = preg_replace( '/[^a-zA-Z0-9_-]/' , '' , $_GET['lib'] ) ;
+    $page = preg_replace( '/[^a-zA-Z0-9_-]/' , '' , @$_GET['page'] ) ;
+    
+    if( file_exists( XOOPS_TRUST_PATH.'/libs/'.$lib.'/'.$page.'.php' ) ) {
+	include XOOPS_TRUST_PATH.'/libs/'.$lib.'/'.$page.'.php' ;
+	} else if( file_exists( XOOPS_TRUST_PATH.'/libs/'.$lib.'/index.php' ) ) {
+	include XOOPS_TRUST_PATH.'/libs/'.$lib.'/index.php' ;
+    } else {
+	die( 'wrong request' ) ;
+    }
+    exit;
+}
 
 if (isset($_POST['keys'])) {
     $myts =& MyTextSanitizer::getInstance();
@@ -60,7 +79,6 @@ if (isset($_POST['keys'])) {
 	redirect_result($res, 'index.php');
     }
 }
-
 
 xoops_cp_header();
 include "mymenu.php";
@@ -238,6 +256,17 @@ function contents_delete() {
 	$xoopsDB->query("DELETE FROM ".ATTACH." WHERE midref IN ($delset)");
 	$xoopsDB->query("DELETE FROM ".RELAY." WHERE midref IN ($delset)");
 	$xoopsDB->query("DELETE FROM ".$xoopsDB->prefix('xoopscomments')." WHERE com_modid=".$xoopsModule->getVar('mid')." AND com_itemid IN  ($delset)");
+	foreach ($dels as $mid) {
+	    $dir = get_upload_path($mid);
+	    if (is_dir($dir)) {
+		$dh = opendir($dir);
+		while ($file = readdir($dh)) {
+		    if ($file!='.' && $file != '..') unlink("$dir/$file");
+		}
+		closedir($dh);
+		rmdir($dir);
+	    }
+	}
     }
     return $res;
 }
@@ -361,11 +390,13 @@ function field_form($fid=0) {
     } else {
 	$form->addElement(new XoopsFormLabel(_AM_FIELDS_NAME, $fname));
 	$form->addElement(new XoopsFormLabel(_AM_FIELDS_TYPE, $all_types[$type].($size?" ($size)":'')));
-	
     }
-    if (!in_array($fname, array('ctime','mtime','hits', 'poster')) &&
-	$type!='link') {
-	$form->addElement(new XoopsFormText(_AM_FIELDS_DEF, 'def', 40, 60, $vals['def']));
+    if (!in_array($fname, array('ctime','mtime','hits', 'poster'))) {
+	if ($type=='link') {
+	    $form->addElement(new XoopsFormText(_AM_FIELDS_NUMBER, 'def', 4, 4, $vals['def']));
+	} else {
+	    $form->addElement(new XoopsFormText(_AM_FIELDS_DEF, 'def', 40, 60, $vals['def']));
+	}
     }
     $form->addElement(new XoopsFormText(_AM_SORT_WEIGHT, 'weight', 4, 4, $vals['weight']));
     $form->addElement(new XoopsFormButton('' , 'field', _SUBMIT, 'submit')) ;

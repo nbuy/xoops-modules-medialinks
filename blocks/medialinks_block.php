@@ -1,94 +1,32 @@
 <?php
 # Medialinks - blocksupport
-# $Id: medialinks_block.php,v 1.5 2006/07/22 03:22:39 nobu Exp $
+# $Id: medialinks_block.php,v 1.6 2007/11/24 09:49:14 nobu Exp $
 
-global $order_items;
-$order_items = array('ctime'=>_BLOCK_SORT_CTIME,
-		     'mtime'=>_BLOCK_SORT_MTIME,
-		     'hits' =>_BLOCK_SORT_HITS);
+include_once dirname(dirname(__FILE__))."/functions.php";
+// options: [0] order, [1] lines, [2] strlen
 
-// options: [0] order, [1] lines, [2] strlen, [3] verb
 function b_medialinks_show($options) {
-    global $xoopsDB, $xoopsUser, $order_items, $keywords;
-    $myts =& MyTextSanitizer::getInstance();
-    $dirname = basename(dirname(dirname(__FILE__)));
-    $modurl = XOOPS_URL."/modules/$dirname";
+    return ml_index_view($options[0]." DESC", $options[2], $options[3], $options[4], $options[1], 0, _BLOCK_MEDIALINKS_DFMT);
+}
 
-    $order = $options[0];
-    if (!isset($order_items[$order])) $order = 'ctime';
-    $lines = intval($options[1]);
-    $len   = intval($options[2]);
-    $sql = "SELECT mid, title, description, ctime, mtime, poster, hits FROM ".
-	$xoopsDB->prefix('medialinks')." WHERE status='N' ORDER BY $order DESC";
-    $result = $xoopsDB->query($sql, $lines);
-    if (!$result || $xoopsDB->getRowsNum($result)==0) return null;
-
-    $verb = $options[3];
-    if (empty($keywords)) {
-	require_once dirname(dirname(__FILE__))."/functions.php";
-	$keywords = new Keywords();
+function b_ml_select($name, $opts, $def) {
+    $buf = "<select name='$name'>\n";
+    foreach ($opts as $val=>$label) {
+	$sel = ($val == $def)?' selected="selected"':'';
+	$buf .= "<option value='$val'$sel>$label</option>\n";
     }
-
-    $block = array('order'=>$order,
-		   'order_by'=>$order_items[$order],
-		   'lang_more'=>_BLOCK_MEDIALINKS_MORE,
-		   'verbose'=>$verb,
-		   'dirname'=>$dirname,
-		   'module_url'=>$modurl);
-    $contents = array();
-    while ($myrow = $xoopsDB->fetchArray($result)) {
-	$myrow['title'] = htmlspecialchars(b_mysubstr($myrow["title"], $len));
-	$myrow['description'] = $myts->displayTarea($myrow["description"]);
-	$myrow['cdate'] = formatTimestamp($myrow['ctime'], _BLOCK_MEDIALINKS_DFMT);
-	$myrow['mdate'] = formatTimestamp($myrow['mtime'], _BLOCK_MEDIALINKS_DFMT);
-	$myrow['uname'] = XoopsUser::getUnameFromId($myrow['poster']);
-
-	// keywords expand
-	$myrow['keywords'] = keys_expand($myrow['mid'], _BLOCK_MEDIALINKS_SEP);
-
-	$contents[] = $myrow;
-    }
-    $block['contents'] = $contents;
-    return $block;
+    $buf .= "</select>";
+    return $buf;
 }
 
 function b_medialinks_edit($options) {
-    global $order_items;
-    if ($options[0]) {
-	$sel0=" checked";
-	$sel1="";
-    } else {
-	$sel0="";
-	$sel1=" checked";
-    }
-    $select = _BLOCK_SORT_ORDER." <select name='options[0]'>\n";
-    foreach ($order_items as $k => $v) {
-	$sel = ($options[0]==$k)?' selected':'';
-	$select .= "<option value='$k'$sel>$v</option>\n";
-    }
-    $select .= "</select><br/>\n";
-    if ($options[3]) {
-	$sel0 = ' checked'; $sel1 = '';
-    } else {
-	$sel0 = ''; $sel1 = ' checked';
-    }
-    return $select.
-	_BLOCK_MEDIALINKS_LINES."&nbsp;<input name='options[1]' value='".$options[1]."'/><br/>\n".
-	
-	_BLOCK_MEDIALINKS_TRIM."&nbsp;<input name='options[2]' value='".$options[2]."'/><br/>\n".
-	_BLOCK_MEDIALINKS_VERB." &nbsp; <input type='radio' name='options[3]' value='1'$sel0/>"._YES." &nbsp; \n".
-	"<input type='radio' name='options[3]' value='0'$sel1/>"._NO."<br/>\n";
-}
-
-function b_mysubstr($text, $len) {
-    if (strlen($text)<$len) return $text;
-    if (XOOPS_USE_MULTIBYTES) {
-	if (function_exists('mb_strcut')) {
-	    return mb_strcut($text, 0, $len-1, _CHARSET)."...";
-	}
-    } else {
-	return substr($text, 0, $len-1)."...";
-    }
-    return $text;
+    $order_items = array('ctime'=>_BLOCK_SORT_CTIME,
+			 'mtime'=>_BLOCK_SORT_MTIME,
+			 'hits' =>_BLOCK_SORT_HITS);
+    return _BLOCK_SORT_ORDER." ".b_ml_select('options[0]', $order_items, $options[0])."<br/>\n".
+	_BLOCK_MEDIALINKS_LINES." <input name='options[1]' size='5' value='".$options[1]."'/><br />\n".
+	_BLOCK_MEDIALINKS_TRIM." <input name='options[2]' size='5' value='".$options[2]."'/><br />\n".
+	_BLOCK_MEDIALINKS_CATS." <input name='options[3]' value='".$options[3]."'/><br />\n".
+	_BLOCK_MEDIALINKS_STYLE." ".b_ml_select('options[4]', explode(',',_BLOCK_MEDIALINKS_TYPES), $options[4]);
 }
 ?>

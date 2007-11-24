@@ -1,6 +1,6 @@
 <?php
 # medialinks admin language resources
-# $Id: admin.php,v 1.2 2007/11/18 05:09:12 nobu Exp $
+# $Id: admin.php,v 1.3 2007/11/24 09:49:14 nobu Exp $
 
 define("_AM_CONTENTS_ADMIN", "Media Contents Management");
 define("_AM_CONTENTS_DEL", "Delete contents");
@@ -33,7 +33,7 @@ define("_AM_KEYWORDS_DESC", "Comments");
 define("_AM_KEYWORDS_REMOVE", "Delete Keyword");
 define("_AM_KEYWORDS_NODETYPE", "Keyword Types");
 define("_AM_KEYWORDS_COUNT", "Usage this keyword");
-define("_AM_KEYWORDS_PRINT", "Keyword \"%s\" reference from %u contents");
+define("_AM_KEYWORDS_PRINT", "Keyword '%s' reference from %u contents");
 
 define("_AM_SORT_WEIGHT", "Display Order <span class='fontSmall'>(0=invisible)</span>");
 define("_AM_KEY_NONE", "None");
@@ -47,6 +47,7 @@ define("_AM_FIELDS_NAME", "Name");
 define("_AM_FIELDS_LABEL", "Label");
 define("_AM_FIELDS_TYPE", "Type");
 define("_AM_FIELDS_DEF", "Default");
+define("_AM_FIELDS_NUMBER", "Number of fields");
 define("_AM_FIELDS_SIZE", "string length");
 define("_AM_FIELDS_OPERATION", "Operation");
 define("_AM_FIELDS_DELETE", "Delete of field");
@@ -86,4 +87,6 @@ define("_AM_HITS", "Hits");
 define("_AM_COUNT", "Counts");
 define("_AM_EXPORT_CHARSET", "UTF-8");
 define("_AM_EXPORT_FILE", "CSV Output");
+
+include_once dirname(__FILE__)."/upload.php";
 ?>

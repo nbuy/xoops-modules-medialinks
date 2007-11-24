@@ -1,4 +1,9 @@
+<{if $block.verbose==2}>
+<{include file="db:medialinks_list_shots.html" media=$block}>
+<{else}>
 <{foreach from=$block.contents item=line key=n}>
+<{if $block.verbose==1}>
+<{* ============== verbose style ============== *}>
 <div>
   <{if $block.order=="hits"}>[<{$line.hits}> hits]
   <{elseif $block.order=="mtime"}><{$line.mdate}>
@@ -8,11 +13,23 @@
     (<{foreach from=$line.keywords item=kname name=keys}><{if !$smarty.foreach.keys.first}>, 
 <{/if}><{$kname}><{/foreach}>)
   <{/if}>
-  <{if $block.verbose}> 
     [<a href="<{$xoops_url}>/userinfo.php?uid=<{$line.poster}>"><{$line.uname}></a>]
     <{if $n==0}>
-    <p class="topbody"><{$line.description}></p>
+      <p class="topbody"><{$line.description}></p>
     <{/if}>
+</div>
+<{else}>
+<{* ============== short style ============== *}>
+<div>
+  <{if $block.order=="hits"}>[<{$line.hits}> hits]
+  <{elseif $block.order=="mtime"}><{$line.mdate}>
+  <{else}><{$line.cdate}><{/if}>
+   <a href="<{$block.module_url}>/detail.php?mid=<{$line.mid}>"><{$line.title}></a> 
+  <{if $line.keywords}>
+    (<{foreach from=$line.keywords item=kname name=keys}><{if !$smarty.foreach.keys.first}>, 
+<{/if}><{$kname}><{/foreach}>)
   <{/if}>
 </div>
+<{/if}>
 <{/foreach}>
+<{/if}>

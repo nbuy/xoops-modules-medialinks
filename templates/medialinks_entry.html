@@ -24,9 +24,15 @@
      <tr>
        <td align="center">
          <input type="hidden" name="linkid[<{$n}>]" value="<{$link.linkid}>"/>
-         <{if $link.linkid}><input type="checkbox" name="dellink[<{$n}>]" value="<{$link.linkid}>"/><{else}><{$smarty.const._MD_NEW}><{/if}>
+         <{if $link.linkid}>
+	   <input type="checkbox" name="dellink[<{$n}>]" value="<{$link.linkid}>"/>
+	 <{elseif empty($link.url) && $is_uploads}>
+	   <a href="uploads.php?mid=<{$form.mid}>&a=<{$n}>" target="imgform" onClick="xoopsCodeImg('<{$n}>')"><{$smarty.const._MD_NEW}></a>
+	 <{else}>
+	   <{$smarty.const._MD_NEW}>
+	 <{/if}>
        </td>
-       <td><input name="linkurl[<{$n}>]" size="30" maxlength="255" value="<{$link.url}>"/></td>
+       <td><input name="linkurl[<{$n}>]" id="linkurl[<{$n}>]" size="30" maxlength="255" value="<{$link.url}>"/></td>
        <td><input name="linkname[<{$n}>]" size="20" maxlength="128" value="<{$link.name}>"/><input type="hidden" name="linkgrp[<{$n}>]" value="<{$ele.name}>"/></td>
        <td><input name="linkord[<{$n}>]" size="2" value="<{$link.weight}>"/></td>
      </tr>
@@ -50,6 +56,44 @@ document.write('<input type="button" value="<{$smarty.const._MD_CAL_BUTTON}>" on
 </tr>
 <{/if}>
 <{/foreach}>
+<{if isset($acls)}>
+<tr class="<{cycle values="even, odd"}>">
+  <th><{$smarty.const._MD_CONTENT_USERACL}></th>
+  <td>
+    <table cellspacing="0" border="0" cellpadding="0">
+      <tr>
+	<td width="50%">
+    <{if empty($acls)}>
+      <div><{$smarty.const._MD_USERACL_PUBLIC}></div>
+    <{else}>
+      <div id="acls" style="max-height: 10em; overflow-y: auto;">
+      <table cellspacing="0" border="0" cellpadding="0" width="100%">
+	<tr class="head">
+	  <th></th>
+	  <th><{$smarty.const._MD_USERACL_UNAME}></th>
+	  <th><{$smarty.const._MD_USERACL_WRITABLE}></th>
+	</tr>
+      <{foreach from=$acls item=acl}>
+	<tr>
+	  <td><input type="checkbox" name="acl[]" value="<{$acl.uid}>" checked="checked" /></td>
+	  <td><{$acl.uname}></td>
+	  <td><input type="checkbox" name="aclw[]" value="<{$acl.uid}>"<{if $acl.writable=='Y'}> checked="checked"<{/if}> /></td>
+	</tr>
+      <{/foreach}>
+      </table>
+      </div>
+    <{/if}>
+	</td>
+	<td>
+	  <div style="font-weight: bold"><{$smarty.const._MD_USERACL_ADDUSER}></div>
+	  <textarea name="addacl"></textarea>
+	  <div style="font-size: small"><{$smarty.const._MD_USERACL_ADDUSER_DESC}></div>
+	</td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<{/if}>
 <tr class="<{cycle values="even, odd"}>">
   <th></th>
   <td>
@@ -67,6 +111,22 @@ document.write('<input type="button" value="<{$smarty.const._MD_CAL_BUTTON}>" on
 <script type="text/javascript" src="<{$xoops_url}>/include/calendar.js"></script>
 <script type="text/javascript">
 <!--
+// uploads image
+var imgform;
+function is_imgform() { return (imgform && !imgform.closed); }
+function close_imgform() { if (is_imgform()) imgform.close(); }
+function open_imgform(id) {
+	var uri = 'uploads.php';
+	var style='width=500,height=200';
+	imgform = open(uri+'?a='+id, 'imgform', style);
+}
+window.onunload=close_imgform;
+function xoopsCodeImg(id){
+	open_imgform(id);
+	var dom = xoopsGetElementById(id);
+	dom.focus();
+}
+
 function checkvalue(name) {
     obj = xoopsGetElementById(name);
     if (obj) return obj.value == "";

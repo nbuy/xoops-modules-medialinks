@@ -1,8 +1,9 @@
 <?php
 # Medialinks tracking attachment
-# $Id: track.php,v 1.2 2006/07/18 17:44:58 nobu Exp $
+# $Id: track.php,v 1.3 2007/11/24 09:49:13 nobu Exp $
 
 include "../../mainfile.php";
+include_once "perm.php";
 include_once XOOPS_ROOT_PATH.'/class/template.php';
 
 $lid = isset($_GET['lid'])?intval($_GET['lid']):0;
@@ -17,6 +18,12 @@ if (!$lid || !$res || $xoopsDB->getRowsNum($res)==0) {
 }
 list($url, $name, $mid) = $xoopsDB->fetchRow($res);
 $xoopsDB->queryF("UPDATE ".$xoopsDB->prefix('medialinks_attach')." SET hits=hits+1 WHERE linkid=".$lid);
+
+if (!preg_match('/^(\w+:)?\//', $url)) {
+    $url = get_upload_url($mid)."/$url";
+}
+
+if (preg_match('/\\.flv$/i', $url)) $url=XOOPS_URL."/modules/$mydirname/flvplayer.swf?file=$url";
 
 if (XOOPS_USE_MULTIBYTES && function_exists('mb_convert_encoding')) {
     function enc($text, $code='SJIS') {
@@ -40,7 +47,6 @@ if (preg_match('/(iPod|iTunes)/', $name)) {
     header("Cache-Control: public");
     header("Pragma: public");
     
-    $myts =& MyTextSanitizer::getInstance();
     $tpl->xoops_setCaching(2);
     $tpl->xoops_setCacheTime(3600);
     if (true || !$tpl->is_cached('db:medialinks_rss.xml', $cache_id)) {

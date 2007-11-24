@@ -1,10 +1,10 @@
 <?php
 // MediaLinks - Multimedia Contents Holder Module
-// $Id: xoops_version.php,v 1.8 2006/07/27 15:42:31 nobu Exp $
+// $Id: xoops_version.php,v 1.9 2007/11/24 09:49:13 nobu Exp $
 
 $modversion=array(
     'name'	=> _MI_MEDIALINKS_NAME,
-    'version'	=> 1.01,
+    'version'	=> "1.94",
     'description'=> _MI_MEDIALINKS_DESC,
     'credits'	=> "Nobuhiro Yasutomi",
     'author'	=> "Nobuhiro Yasutomi",
@@ -25,6 +25,7 @@ $modversion['tables'][] = "medialinks_keys";
 $modversion['tables'][] = "medialinks_relation";
 $modversion['tables'][] = "medialinks_fields";
 $modversion['tables'][] = "medialinks_attach";
+$modversion['tables'][] = "medialinks_access";
 
 // Admin things
 $modversion['hasAdmin'] = 1;
@@ -42,8 +43,13 @@ $modversion['templates'][]=array('file' => 'medialinks_detail.html',
 				 'description' => _MI_MEDIALINKS_DETAIL_TPL);
 $modversion['templates'][]=array('file' => 'medialinks_list.html',
 				 'description' => _MI_MEDIALINKS_LIST_TPL);
+$modversion['templates'][]=array('file' => 'medialinks_list_shots.html',
+				 'description' => _MI_MEDIALINKS_LISTSHOTS_TPL);
 $modversion['templates'][]=array('file' => 'medialinks_operate.html',
 				 'description' => _MI_MEDIALINKS_OPERATE_TPL);
+$modversion['templates'][]=array('file' => 'medialinks_uploads.html',
+				 'description' => _MI_MEDIALINKS_UPLOADS_TPL);
+
 $modversion['templates'][]=array('file' => 'medialinks_rss.xml',
 				 'description' => _MI_MEDIALINKS_RSS_TPL);
 $modversion['templates'][]=array('file' => 'medialinks_track.asx',
@@ -53,6 +59,9 @@ $modversion['templates'][]=array('file' => 'medialinks_track.qtl',
 // OnInstall - initialize table records
 $modversion['onInstall'] = "oninstall.php";
 
+// OnUpdate - upgrade DATABASE 
+$modversion['onUpdate'] = "onupdate.php";
+
 // Blocks
 $modversion['blocks'][1]=array(
     'file' => "medialinks_block.php",
@@ -60,7 +69,7 @@ $modversion['blocks'][1]=array(
     'description' => _MI_MEDIALINKS_BLOCK_NEW_DESC,
     'show_func' => 'b_medialinks_show',
     'edit_func' => 'b_medialinks_edit',
-    'options' => 'ctime|5|32|0',
+    'options' => 'ctime|5|32||0',
     'template' => 'medialinks_block.html');
 
 $modversion['blocks'][]= array(
@@ -69,7 +78,7 @@ $modversion['blocks'][]= array(
     'description' => _MI_MEDIALINKS_BLOCK_TOP_DESC,
     'show_func' => 'b_medialinks_show',
     'edit_func' => 'b_medialinks_edit',
-    'options' => 'hits|5|32|0',
+    'options' => 'hits|5|32||0',
     'template' => 'medialinks_block.html');
 
 $modversion['blocks'][]= array(
@@ -78,9 +87,8 @@ $modversion['blocks'][]= array(
     'description' => _MI_MEDIALINKS_BLOCK_MODIFY_DESC,
     'show_func' => 'b_medialinks_show',
     'edit_func' => 'b_medialinks_edit',
-    'options' => 'mtime|5|32|0',
+    'options' => 'mtime|5|32||0',
     'template' => 'medialinks_block.html');
-
 
 // Menu
 $modversion['hasMain'] = 1;
@@ -106,9 +114,9 @@ $modversion['config'][]=array(
     'name' => 'post_group',
     'title' => '_MI_MEDIALINKS_POSTGRP',
     'description' => '_MI_MEDIALINKS_POSTGRP_DSC',
-    'formtype' => 'group',
-    'valuetype' => 'int',
-    'default' => XOOPS_GROUP_USERS);
+    'formtype' => 'group_multi',
+    'valuetype' => 'array',
+    'default' => array(XOOPS_GROUP_USERS));
 $modversion['config'][]=array(
     'name' => 'notify_admin',
     'title' => '_MI_MEDIALINKS_NOTIFYAD',
@@ -131,6 +139,16 @@ $modversion['config'][]=array(
     'valuetype' => 'int',
     'default' => 10);
 $modversion['config'][]=array(
+    'name' => 'list_style',
+    'title' => '_MI_MEDIALINKS_LISTSTYLE',
+    'description' => '_MI_MEDIALINKS_LISTSTYLE_DSC',
+    'formtype' => 'select',
+    'valuetype' => 'int',
+    'options'=>array(_MI_MEDIALINKS_STYLE_SHORT=>0,
+		     _MI_MEDIALINKS_STYLE_VERB=>1,
+		     _MI_MEDIALINKS_STYLE_SHOTS=>2),
+    'default' => 2);
+$modversion['config'][]=array(
     'name' => 'max_rows',
     'title' => '_MI_MEDIALINKS_MAXROWS',
     'description' => '_MI_MEDIALINKS_MAXROWS_DSC',
@@ -145,12 +163,47 @@ $modversion['config'][]=array(
     'valuetype' => 'int',
     'default' => 0);
 $modversion['config'][]=array(
-    'name' => 'use_comment',
-    'title' => '_MI_MEDIALINKS_COMMENT',
-    'description' => '_MI_MEDIALINKS_COMMENT_DSC',
+    'name' => 'user_acl',
+    'title' => '_MI_MEDIALINKS_USERACL',
+    'description' => '_MI_MEDIALINKS_USERACL_DSC',
     'formtype' => 'yesno',
     'valuetype' => 'int',
-    'default' => 1);
+    'default' => 0);
+$modversion['config'][]=array(
+    'name' => 'user_upload',
+    'title' => '_MI_MEDIALINKS_USERUPLOAD',
+    'description' => '_MI_MEDIALINKS_USERUP_DSC',
+    'formtype' => 'group_multi',
+    'valuetype' => 'array',
+    'default' => array(XOOPS_GROUP_USERS));
+$modversion['config'][]=array(
+    'name' => 'upload_path',
+    'title' => '_MI_MEDIALINKS_UPLOADPATH',
+    'description' => '_MI_MEDIALINKS_UPPATH_DSC',
+    'formtype' => 'text',
+    'valuetype' => 'string',
+    'default' => $modversion['dirname']);
+$modversion['config'][]=array(
+    'name' => 'upload_ext',
+    'title' => '_MI_MEDIALINKS_UPLOADEXT',
+    'description' => '_MI_MEDIALINKS_UPEXT_DSC',
+    'formtype' => 'text',
+    'valuetype' => 'string',
+    'default' => 'gif|jpg|png|avi|mov|wmv|mp4|flv|doc|xls|ods|odt|pdf');
+$modversion['config'][]=array(
+    'name' => 'shotopts',
+    'title' => '_MI_MEDIALINKS_SHOTOPTS',
+    'description' => '_MI_MEDIALINKS_SOPTS_DC',
+    'formtype' => 'text',
+    'valuetype' => 'string',
+    'default' => '-ss 5');
+$modversion['config'][]=array(
+    'name' => 'd3forumid',
+    'title' => '_MI_MEDIALINKS_D3FORUMID',
+    'description' => '_MI_MEDIALINKS_D3ID_DESC',
+    'formtype' => 'text',
+    'valuetype' => 'string',
+    'default' => '');
 
 // Notification
 

@@ -82,6 +82,21 @@ td,th { padding: 4px; background: #e8e8e8;}
 
   medialinks/track.php を介して参照されたリンクの参照回数を表示する。
 
+  <h2>d3forum のコメント統合</h2>
+
+  <h2>サーバーの設定</h2>
+
+  <ul>
+    <li>サイズの大きいファイルのアップロードでは安全のため様々な
+    制限が設けてあるので注意する。例えば PHP の設定
+    (<tt>/etc/php.ini</tt>) では次のような設定値が問題になる。
+      <ul>
+	<li><tt>post_max_size = 8M</tt></li>
+	<li><tt>upload_max_filesize = 2M</tt></li>
+      </ul>
+    </li>
+  </ul>
+
   <h2>一般設定</h2>
 
   <blockquote>
@@ -131,6 +146,6 @@ td,th { padding: 4px; background: #e8e8e8;}
   <hr>
 <address>安富 伸浩 &lt;<a href="mailto:nobuhiro.yasutomi@nifty.ne.jp">nobuhiro.yasutomi@nifty.ne.jp</a>&gt;</address>
 マイサイト ユーザーズ <a href="http://mysite.ddo.jp/">http://mysite.ddo.jp/</a><br/>
-$Id: help.html,v 1.6 2006/07/22 05:36:41 nobu Exp $
+$Id: help.html,v 1.7 2007/11/24 09:49:14 nobu Exp $
 </body>
 </html>

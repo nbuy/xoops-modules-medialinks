@@ -1,26 +1,50 @@
 <?php
 # Medialinks - contents page entry and edit
-# $Id: entry.php,v 1.4 2006/07/20 06:38:20 nobu Exp $
+# $Id: entry.php,v 1.5 2007/11/24 09:49:13 nobu Exp $
 
 include "../../mainfile.php";
 include_once "functions.php";
 include_once XOOPS_ROOT_PATH.'/class/xoopsformloader.php';
 include_once XOOPS_ROOT_PATH.'/language/'.$xoopsConfig['language'].'/calendar.php';
 
-if (!is_object($xoopsUser) ||
-    (!in_array($xoopsModuleConfig['post_group'], $xoopsUser->getGroups()) &&
-     !$xoopsUser->isAdmin($xoopsModule->getVar('mid')))) {
+$mid = isset($_REQUEST['mid'])?intval($_REQUEST['mid']):0;
+if (!is_object($xoopsUser) || !check_access($mid)) {
     redirect_header('index.php', 3, _NOPERM);
     exit;
 }
 
-define('MODULE_URL', XOOPS_URL."/modules/".$xoopsModule->getVar('dirname'));
-
 if (isset($_POST['save'])) {
-    $content = new MediaContent(intval($_POST['mid']));
+    $pmid = intval($_POST['mid']);
+    $content = new MediaContent($pmid);
     $stat = $content->getVar('status');
     $content = store_entry($content);
+    $acls = ml_parse_acl();
+    if ($content->getVar('nacl') != count($acls)) {
+	$content->setVar('nacl', count($acls));
+    }
     $mid = $content->store();
+    if ($mid==0 && $pmid) {	// no updates
+	$preacl = ml_get_acl($pmid, true);
+	if (count($acls)==count($preacl) && count($acls)>0) {
+	    foreach ($acls as $acl) { // check change acl
+		$uid = $acl['uid'];
+		if (!isset($preacl[$uid]) || $preacl[$uid]!=$acl['writable']) {
+		    $mid = $pmid; // need update acl
+		    break;
+		}
+	    }
+	} else $mid = $pmid;
+    }
+    if ($mid) {
+	$xoopsDB->query("DELETE FROM ".ACLS." WHERE amid=$mid");
+	if (count($acls)) {
+	    foreach ($acls as $acl) {
+		$uid = $acl['uid'];
+		$wr = $xoopsDB->quoteString($acl['writable']);
+		$xoopsDB->query("INSERT INTO ".ACLS."(auid, amid, writable) VALUES($uid,$mid,$wr)");
+	    }
+	}
+    }
     if ($stat=='W' && $content->getVar('status')=='N') {
 	$tags = array(
 	    'TITLE'=>$content->getVar('title'),
@@ -35,10 +59,12 @@ if (isset($_POST['save'])) {
     if ($mid) {
 	redirect_header('detail.php?mid='.$mid, 1, _MD_DBUPDATED);
     } else {
-	//redirect_header('detail.php?mid='.$mid, 3, _MD_DBUPDATE_FAIL);
+	redirect_header('detail.php?mid='.$pmid, 3, _MD_DBUPDATE_FAIL);
+	/*
 	$err = array_pop($xoopsDB->logger->queries);
 	echo "<div style='color:#008'>".$err['sql']."</div>";
 	echo "<div style='color:#800'>".$err['error']."</div>";
+	*/
     }
     exit;
 }
@@ -52,7 +78,6 @@ if (isset($monthname)) $xoopsTpl->assign('monthname', $monthname);
 $y = formatTimestamp(time(), 'Y');
 $xoopsTpl->assign('calrange', array($y-10,$y+10));
 
-$mid = isset($_GET['mid'])?intval($_GET['mid']):0;
 $title = $mid?_MD_CONTENT_EDIT:_MD_CONTENT_NEW;
 
 $xoopsTpl->assign('xoops_pagetitle', htmlspecialchars($xoopsModule->getVar('name')._MD_SEP.$title));
@@ -67,10 +92,9 @@ if ($preview) {
     $content = new MediaContent($mid);
 }
 
+$isadmin = $xoopsUser->isAdmin($xoopsModule->getVar('mid'));
 if ($mid && $content->getVar('status')!='N') { // deleted content view only admin
-    if (!is_object($xoopsUser) ||
-	!($xoopsUser->isAdmin($xoopsModule->getVar('mid')) ||
-	  ($content->getVar('status')=='W' && $content->getVar('poster')==$xoopsUser->getVar('uid')))) {
+    if (!$isadmin || ($content->getVar('status')=='W' && $content->getVar('poster')==$xoopsUser->getVar('uid'))) {
 	redirect_header('index.php', 3, _NOPERM);
 	exit;
     }
@@ -97,7 +121,7 @@ foreach ($dests as $k => $v) {
 
 $xoopsTpl->assign('relays', $relays);
 $xoopsTpl->assign('dests', $dests);
-$xoopsTpl->assign('initid', "new Array(".join(',',$roots).")");
+$xoopsTpl->assign('initid', "new Array(".($roots?join(',',$roots):"").")");
 
 $linkseq = 0;
 $require = array();
@@ -120,8 +144,9 @@ foreach ($content->getField() as $k=>$field) {
 	foreach ($content->getAttach(substr($field['name'], 0, 1)) as $data) {
 	    $v[$linkseq++] = $data;
 	}
-	$lp = max(3-count($v),1);
-	$blank = array('linkid'=>0, 'url'=>$field['def'], 'name'=>'', 'weight'=>1);
+	$max = $field['def']==""?3:intval($field['def']);
+	$lp = max($max-count($v),1);
+	$blank = array('linkid'=>0, 'url'=>'', 'name'=>'', 'weight'=>1);
 	for ($i=0; $i<$lp; $i++) {
 	    $v[$linkseq++] = $blank;
 	}
@@ -169,7 +194,7 @@ foreach ($content->getField() as $k=>$field) {
 }
 
 // status setting only by admin
-if ($xoopsUser->isAdmin($xoopsModule->getVar('mid'))) {
+if ($isadmin) {
     $status = new XoopsFormSelect('', 'status', $content->getVar('status'));
     $status->addOptionArray($status_sel);
     $form['status'] = array(
@@ -179,6 +204,13 @@ if ($xoopsUser->isAdmin($xoopsModule->getVar('mid'))) {
 
 $xoopsTpl->assign('form', $form);
 $xoopsTpl->assign('check', $require);
+$xoopsTpl->assign('is_uploads', check_groups('user_upload'));
+
+if ($isadmin || !empty($xoopsModuleConfig['user_acl'])) {
+    $acls = $preview?ml_parse_acl():ml_get_acl($mid);
+    $xoopsTpl->assign('acls', $acls);
+}
+$xoopsTpl->assign('form', $form);
 
 include XOOPS_ROOT_PATH."/footer.php";
 
@@ -320,5 +352,66 @@ function keywords_widget(&$ret, &$relays, &$roots) {
 	$ret[$key['keyid']] = $words->render();
     }
     return $ret;
+}
+
+function ml_parse_acl() {
+    global $xoopsDB;
+
+    $wrs = $ids = array();
+    $unames = array();
+    if (isset($_POST['acl'])) {
+	foreach ($_POST['acl'] as $uid) {
+	    $ids[] = intval($uid);
+	}
+    }
+    if (isset($_POST['aclw'])) {
+	foreach ($_POST['aclw'] as $uid) {
+	    $wrs[] = intval($uid);
+	}
+    }
+    if (isset($_POST['addacl'])) {
+	foreach(explode("\n", $_POST['addacl']) as $uid) {
+	    $uid = trim($uid);
+	    if (preg_match('/^\d+$/', $uid)) {
+		$ids[] = intval($uid);
+	    } elseif(!empty($uid)) {
+		$unames[] = $xoopsDB->quoteString($uid);
+	    }
+	}
+    }
+    if (count($ids)==0 && count($unames)==0) return array();
+    $cond = count($ids)?"uid IN (".join(',', $ids).")":"";
+    if (count($unames)) {
+	if ($cond) $cond .= " OR ";
+	$cond .= "uname IN (".join(',', $unames).")";
+    }
+    $res = $xoopsDB->query("SELECT uid,uname,name,user_avatar FROM ".$xoopsDB->prefix('users')." WHERE level>0 AND ($cond) ORDER BY uname");
+    $acls = array();
+    while ($user = $xoopsDB->fetchArray($res)) {
+	$user['writable'] = in_array($user['uid'], $wrs)?'Y':'N';
+	foreach (array('uname','name','user_avatar') as $k) {
+	    $user[$k] = htmlspecialchars($user[$k]);
+	}
+	$acls[] = $user;
+    }
+    return $acls;
+}
+
+function ml_get_acl($mid, $short=false) {
+    global $xoopsDB;
+
+    $res = $xoopsDB->query("SELECT uid,uname,name,user_avatar,writable FROM ".ACLS.", ".$xoopsDB->prefix('users')." WHERE auid=uid AND level>0 AND amid=$mid ORDER BY uname");
+    $acls = array();
+    while ($user = $xoopsDB->fetchArray($res)) {
+	if ($short) {
+	    $acls[$user['uid']] = $user['writable'];
+	} else {
+	    foreach (array('uname','name','user_avatar') as $k) {
+		$user[$k] = htmlspecialchars($user[$k]);
+	    }
+	    $acls[] = $user;
+	}
+    }
+    return $acls;
 }
 ?>

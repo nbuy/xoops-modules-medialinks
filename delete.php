@@ -1,6 +1,6 @@
 <?php
 # Medialinks view a page
-# $Id: delete.php,v 1.1 2006/07/12 16:27:25 nobu Exp $
+# $Id: delete.php,v 1.2 2007/11/24 09:49:13 nobu Exp $
 
 include "../../mainfile.php";
 include_once "functions.php";
@@ -25,7 +25,7 @@ if (empty($mid) || $content->getVar('status')=='X' ||
 }
 if (isset($_POST['delete'])) {
     $content->setVar('status', 'X');
-    if ($content->store()) redirect_header('index.php', 1, _MD_DBUPDATED);
+    if ($content->store()) redirect_header('index.php', 1, _MD_DBUPDATE_DEL);
     else redirect_header('index.php', 2, _MD_DBUPDATE_FAIL);
 }
 include XOOPS_ROOT_PATH."/header.php";

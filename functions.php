@@ -1,15 +1,19 @@
 <?php
 # medialinks common functions
-# $Id: functions.php,v 1.6 2006/07/27 15:41:15 nobu Exp $
+# $Id: functions.php,v 1.7 2007/11/24 09:49:13 nobu Exp $
 
 include_once XOOPS_ROOT_PATH.'/class/xoopsformloader.php';
+include_once "perm.php";
 
+global $xoopsDB;
 define('INDENT', '-');
+define('ACLS', $xoopsDB->prefix('medialinks_access'));
 define('KEYS', $xoopsDB->prefix('medialinks_keys'));
 define('FIELDS', $xoopsDB->prefix('medialinks_fields'));
 define('ATTACH', $xoopsDB->prefix('medialinks_attach'));
 define('MAIN', $xoopsDB->prefix('medialinks'));
 define('RELAY', $xoopsDB->prefix('medialinks_relation'));
+define('MODULE_URL', XOOPS_URL."/modules/".basename(dirname(__FILE__)));
 
 define('NODE_BOTH', 0);
 define('NODE_CATEGORY', 1);
@@ -212,6 +216,7 @@ class MediaContent {
     var $kdirty = false;
     var $attach = array();
     var $adirty = array();
+    var $access = array();
 
     function MediaContent($id=0) {
 	global $xoopsModuleConfig;
@@ -222,23 +227,37 @@ class MediaContent {
     function load($id, $sel=null) {
 	global $xoopsDB, $xoopsUser, $xoopsModule;
 	if (is_object($xoopsUser)) {
-	    if ($xoopsUser->isAdmin($xoopsModule->getVar('mid'))) {
+	    $uid = $xoopsUser->getVar('uid');
+	    $isadmin = $xoopsUser->isAdmin($xoopsModule->getVar('mid'));
+	    if ($isadmin) {
 		$cond = "";
 	    } else {
-		$uid = $xoopsUser->getVar('uid');
 		$cond = " AND (status='N' OR (status='W' AND poster=$uid))";
 	    }
 	} else {
 	    $cond = " AND status='N'";
+	    $uid = 0;
+	    $isadmin = false;
 	}
+
 	if ($id) {
-	    $res = $xoopsDB->query("SELECT * FROM ".MAIN." WHERE mid=".$id.$cond);
+	    $res = $xoopsDB->query("SELECT * FROM ".MAIN." WHERE mid=$id".$cond);
 	} else {
 	    $res = $sel;
 	}
 	if ($res) {
-	    $this->vars = $xoopsDB->fetchArray($res);
-	    if (empty($this->vars)) return false;
+	    $vars = $xoopsDB->fetchArray($res);
+	    // need check access control
+	    if (!$isadmin && $vars['nacl']>0) {
+		if (isset($vars['writable'])) {
+		    if (empty($vars['writable'])) return false;
+		} else {
+		    $res = $xoopsDB->query("SELECT writable FROM ".ACLS." WHERE amid=$id AND auid=$uid");
+		    if (!$res || $xoopsDB->getRowsNum($res)==0) return false;
+		    list($vars['writable']) = $xoopsDB->fetchRow($res);
+		}
+	    }
+	    $this->vars = $vars;
 	    $id = $this->getVar('mid');
 	    // load keywords
 	    $res = $xoopsDB->query("SELECT keyref FROM ".RELAY." WHERE midref=".$id);
@@ -253,7 +272,7 @@ class MediaContent {
 	    }
 	}
 	if ($res) {
-	    $res = $xoopsDB->query("SELECT *  FROM ".ATTACH." WHERE midref=$id ORDER BY weight");
+	    $res = $xoopsDB->query("SELECT * FROM ".ATTACH." WHERE midref=$id ORDER BY weight,linkid");
 	    $attach = array();
 	    while ($data = $xoopsDB->fetchArray($res)) {
 		$attach[$data['linkid']] = $data;
@@ -338,6 +357,8 @@ class MediaContent {
 	    if ($res) {
 		$notify = true;
 		$vars['mid'] = $mid = $xoopsDB->getInsertId();
+		$work = get_upload_path(0);
+		if (is_dir($work)) rename($work, get_upload_path($mid));
 		$this->dirty = array();
 		if ($this->kdirty) {
 		    $sql = "INSERT INTO ".RELAY."(keyref, midref) VALUES(%u, $mid)";
@@ -373,23 +394,25 @@ class MediaContent {
 	if ($res) {
 	    $adirty = &$this->adirty;
 	    $attach = &$this->attach;
-	    foreach ($adirty as $id) {
-		if ($id) {
-		    if (!$this->storeAttach($attach[$id])) return false;
-		} else {
-		    foreach ($attach as $k => $data) {
-			if (empty($data['keyid'])) {
-			    $res = $this->storeAttach($data);
-			    if ($res) {
-				unset($attach[$k]);
-				$data['keyid'] = $res;
-				$attach[$res]=$data;
-			    } else return false;
+	    if (count($adirty)) {
+		foreach ($adirty as $id) {
+		    if ($id) {
+			if (!$this->storeAttach($attach[$id])) return false;
+		    } else {
+			foreach ($attach as $k => $data) {
+			    if (empty($data['keyid'])) {
+				$res = $this->storeAttach($data);
+				if ($res) {
+				    unset($attach[$k]);
+				    $data['keyid'] = $res;
+				    $attach[$res]=$data;
+				} else return false;
+			    }
 			}
 		    }
+		    if (!$res) return false;
+		    unset($adirty[$id]);
 		}
-		if (!$res) return false;
-		unset($adirty[$id]);
 	    }
 	    $tags = array('TITLE'=>$this->getVar('title'),
 			  'POSTER'=>$xoopsUser->getVar('uname'),
@@ -423,13 +446,18 @@ class MediaContent {
 	return $xoopsMailer->send();
     }
 
-    function getAttach($type=null) {
+    function getAttach($type=null, $exp=false) {
 	if ($type==null) return $this->attach;
 	$id = intval($type);
 	if ($id) return $this->attach[$id];
 	$attach = array();
 	$type = strtolower($type);
+	$mid = $this->getVar('mid');
 	foreach ($this->attach as $data) {
+	    if ($exp) {
+		if (empty($data['name'])) $data['name']=basename($data['url']);
+		$data['url'] = get_upload_url($mid, $data['url']);
+	    }
 	    if (strtolower($data['ltype']) == $type) $attach[] = $data;
 	}
 	return $attach;
@@ -487,8 +515,10 @@ class MediaContent {
 	if (!isset($this->attach[$id])) return false;
 	$res = $xoopsDB->query("DELETE FROM ".ATTACH." WHERE linkid=".$id);
 	if ($res) {
+	    $file = get_upload_path($this->getVar('mid'), $this->attach[$id]['url']);
+	    if ($file) unlink($file);
 	    unset($this->attach[$id]);
-	    $this->adirty = true;
+	    $this->adirty[$id] = 0;
 	}
 	return $res;
     }
@@ -501,14 +531,14 @@ class MediaContent {
 	$this->vars['hits']++;
     }
 
-    function dispVars($admin=true) {
+    function dispVars($admin=true, $exp=true) {
 	global $xoopsUser, $xoopsModule, $xoopsConfig, $keywords;
 	$myts =& MyTextSanitizer::getInstance();
 	$keys = $this->getKeywords();
 	$mod = is_object($xoopsModule)?$xoopsModule->getVar('mid'):0;
 	$isadmin = $admin&&is_object($xoopsUser)&&$xoopsUser->isAdmin($mod);
 
-	$fields = array('mid'=>$this->getVar('mid'),
+	$fields = array('mid'=> $mid = $this->getVar('mid'),
 			'status' => $this->getVar('status'),
 			'isadmin'=> $isadmin);
 
@@ -517,7 +547,7 @@ class MediaContent {
 	    $v = $this->getVar($k);
 	    switch ($field['type']) {
 	    case 'link':
-		$v = $this->getAttach(substr($field['name'], 0, 1));
+		$v = $this->getAttach(substr($field['name'], 0, 1), $exp);
 		break;
 	    case 'keywords':
 		if (preg_match('/\\[(\d+)\\]$/', $field['name'], $d)) {
@@ -646,5 +676,95 @@ function keys_expand($mid, $sep="-") {
 	else unset($keys[$id]);
     }
     return $keys;
+}
+
+function set_ml_breadcrumbs($keypath=array(), $adds=array()) {
+    global $xoopsModule, $xoopsTpl;
+    $breadcrumbs = array();
+    $breadcrumbs[] = array('url'=>MODULE_URL.'/',
+			   'name'=>$xoopsModule->getVar('name'));
+    foreach ($keypath as $key) {
+	$breadcrumbs[]=array('url'=>MODULE_URL.'/index.php?keyid='.$key['keyid'],
+			     'name'=>$key['name']);
+    }
+    $xoopsTpl->assign('xoops_breadcrumbs', array_merge($breadcrumbs, $adds));
+}
+
+function ml_mysubstr($text, $len) {
+    if ($len==0 || strlen($text)<$len) return $text;
+    if (XOOPS_USE_MULTIBYTES) {
+	if (function_exists('mb_strcut')) {
+	    return mb_strcut($text, 0, $len-1, _CHARSET)."...";
+	}
+    } else {
+	return substr($text, 0, $len-1)."...";
+    }
+    return $text;
+}
+
+function ml_index_view($order, $trim, $keyid=0, $verb=0, $max=0, $start=0, $fmt='s') {
+    global $xoopsDB, $xoopsUser, $keywords;
+
+    $myts =& MyTextSanitizer::getInstance();
+    $modpath = dirname(__FILE__);
+    $dirname = basename($modpath);
+    $modurl = XOOPS_URL."/modules/$dirname";
+
+    $uid = is_object($xoopsUser)?$xoopsUser->getVar('uid'):0;
+
+    $module_handler =& xoops_gethandler('module');
+    $module =& $module_handler->getByDirname($dirname);
+    $isadmin = $uid&&$xoopsUser->isAdmin($module->getVar('mid'));
+    $cond = "status='N'";
+    if ($keyid) {
+	$kcond = 'keyref IN ('.join(',', array_map('intval', explode(',', $keyid))).')';
+	$res = $xoopsDB->query("SELECT midref FROM ".RELAY." WHERE ".$kcond);
+	$mids = array();
+	while (list($mid) = $xoopsDB->fetchRow($res)) {
+	    $mids[] = $mid;
+	}
+	$mids = array_unique($mids);
+	if (count($mids)) $cond .= " AND mid IN (".join(',', $mids).")";
+    }
+    $acl = "";
+    if (!$isadmin) {		// check access control
+	$acl = " LEFT JOIN ".$xoopsDB->prefix('medialinks_access').
+	    " ON amid=mid AND auid=$uid";
+	$cond .= " AND (nacl=0 OR auid>0)";
+    }
+    $sql = " FROM ".$xoopsDB->prefix('medialinks')." $acl WHERE $cond";
+    $result = $xoopsDB->query("SELECT count(mid) $sql");
+    list($n) = $xoopsDB->fetchRow($result);
+    $result = $xoopsDB->query("SELECT mid, title, description, ctime, mtime, poster, hits $sql ORDER BY $order", $max, $start);
+    if (!$result || $xoopsDB->getRowsNum($result)==0) return null;
+
+    $len = ($verb==0)?$trim:0; // only trim short style
+    if ($verb==2) require_once $modpath."/screenshot.php";
+
+    $dirname = basename(dirname(__FILE__));
+    $modurl = XOOPS_URL."/modules/$dirname";
+    $media = array('order'=>preg_replace('/\s.*$/', '', $order),
+		   'count' => $n,
+		   'verbose'=>$verb,
+		   'dirname'=>$dirname,
+		   'module_url'=>$modurl);
+    $contents = array();
+    while ($myrow = $xoopsDB->fetchArray($result)) {
+	$myrow['title'] = ml_mysubstr($myrow['title'], $len);
+	$desc = $myts->displayTarea($myrow["description"]);
+	$myrow['description'] = $desc;
+	$myrow['shortdesc'] = ml_mysubstr(strip_tags($desc), 50);
+	$myrow['cdate'] = formatTimestamp($myrow['ctime'], $fmt);
+	$myrow['mdate'] = formatTimestamp($myrow['mtime'], $fmt);
+	$myrow['uname'] = XoopsUser::getUnameFromId($myrow['poster']);
+	if ($verb==2) $myrow['image'] = ml_screenshot($myrow['mid']);
+
+	// keywords expand
+	$myrow['keywords'] = keys_expand($myrow['mid']);
+
+	$contents[] = $myrow;
+    }
+    $media['contents'] = $contents;
+    return $media;
 }
 ?>

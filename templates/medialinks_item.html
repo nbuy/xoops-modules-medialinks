@@ -10,10 +10,16 @@
   <div class="media">
 <{foreach from=$fields.media.value item=link name=media}>
 <{if $smarty.foreach.media.first}>
-  <{if preg_match("/\\.wmv\$/i", $link.url)}>
+  <{if preg_match("/\\.(wmv|avi)\$/i", $link.url)}>
   <embed src="<{$link.url}>" width="320" height="256" alt="<{$link.name}>" autostart="false"/>
-  <{elseif preg_match("/\\.mov\$/", $link.url)}>
+  <{elseif preg_match("/\\.mov\$/i", $link.url)}>
   <embed src="<{$link.url}>" qtsrc="<{$link.url|replace:'http:':'rtsp:'}>" width="320" height="256" controller="true" alt="<{$link.name}>" autoplay="false"/>
+  <{elseif preg_match("/\\.flv\$/i", $link.url)}>
+  <embed src="flvplayer.swf" width="320" height="256" 
+type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" 
+flashvars="file=<{$link.url}>&displayheight=240" />
+  <{elseif preg_match("/\\.(jpe?g|png|gif)\$/i", $link.url)}>
+  <a href="track.php?lid=<{$link.linkid}>" target="_blank"><img src="<{$link.url}>" width="320" alt="<{$link.name}>" /></a>
   <{else}>
    ??? <{$link.url}>
   <{/if}>
@@ -35,7 +41,7 @@
 <div><b><{$ele.label}></b>:
 <ul>
     <{foreach from=$ele.value item=link}>
-    <li><a href="track.php?lid=<{$link.linkid}>" target="_blank"><{$link.name}></a></li>
+    <li><a href="<{if $link.linkid}>track.php?lid=<{$link.linkid}><{else}><{$link.url}><{/if}>" target="_blank"><{$link.name}></a></li>
     <{/foreach}>
 </ul>
 <{/if}>

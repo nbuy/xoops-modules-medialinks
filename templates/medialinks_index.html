@@ -37,18 +37,40 @@
   </table>
 
 <{/foreach}>
-<{if $count}>
+<{if $media.count}>
 <h2><{$keyname}></h2>
 <{if $keydesc}><div class="description"><{$keydesc}></div><{/if}>
-<p><b><{$smarty.const._MD_COUNT}></b> <{$count}> [ <a href="list.php?keyid=<{$keyid}>"><{$smarty.const._MD_VIEW_LIST}></a> ]</p>
+<p><b><{$smarty.const._MD_COUNT}></b> <{$media.count}> [ <a href="list.php?keyid=<{$keyid}>"><{$smarty.const._MD_VIEW_LIST}></a> ]</p>
 
 <{if $pagenav}>
 <div class="pagenav"><{$smarty.const._MD_VIEW_PAGE}> <{$pagenav}></div>
 <{/if}>
-
-<{foreach from=$lists item=ent}>
-  <div><a href="detail.php?mid=<{$ent.mid}><{if $keyid}>&keyid=<{$keyid}><{/if}>"><{$ent.title}></a> (<{$ent.date}>)</div>
-<{/foreach}>
+<{if $media.verbose==2}>
+  <{include file="db:medialinks_list_shots.html"}>
+<{elseif $media.verbose==1}>
+  <table border="0" cellspacing="0" class="outer">
+    <tr>
+      <th><{$smarty.const._MD_DATE}></th>
+      <th><{$smarty.const._MD_TITLE}></th>
+      <th><{$smarty.const._MD_HITS}></th>
+      <th></th>
+    </tr>
+  <{foreach from=$media.contents item=ent}>
+    <tr class="<{cycle values="even, odd"}>">
+      <td><{$ent.cdate}></td>
+      <td>
+	<a href="detail.php?mid=<{$ent.mid}><{if $keyid}>&keyid=<{$keyid}><{/if}>" style="display:block;"><{$ent.title}></a>
+      </td>
+      <td align="right"><{$ent.hits}></td>
+      <td><{$ent.shortdesc}></td>
+    </tr>
+  <{/foreach}>
+  </table>
+<{else}>
+  <{foreach from=$media.contents item=ent}>
+    <div><a href="detail.php?mid=<{$ent.mid}><{if $keyid}>&keyid=<{$keyid}><{/if}>"><{$ent.title}></a> (<{$ent.cdate}>)</div>
+  <{/foreach}>
+  <{/if}>
 <{/if}>
 
 <{if $pagenav}>

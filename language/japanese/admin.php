@@ -1,6 +1,6 @@
 <?php
 # medialinks admin language resources
-# $Id: admin.php,v 1.3 2006/07/22 05:36:41 nobu Exp $
+# $Id: admin.php,v 1.4 2007/11/24 09:49:14 nobu Exp $
 
 define("_AM_CONTENTS_ADMIN", "コンテンツの管理");
 define("_AM_CONTENTS_DEL", "コンテンツを削除します");
@@ -47,6 +47,7 @@ define("_AM_FIELDS_NAME", "名前");
 define("_AM_FIELDS_LABEL", "名称");
 define("_AM_FIELDS_TYPE", "データ型");
 define("_AM_FIELDS_DEF", "既定値");
+define("_AM_FIELDS_NUMBER", "フィールドの数");
 define("_AM_FIELDS_SIZE", "文字列長");
 define("_AM_FIELDS_OPERATION", "操作");
 define("_AM_FIELDS_DELETE", "フィールドの削除");
@@ -86,4 +87,6 @@ define("_AM_HITS", "参照数");
 define("_AM_COUNT", "件数");
 define("_AM_EXPORT_CHARSET", "UTF-8");
 define("_AM_EXPORT_FILE", "CSVファイル出力");
+
+include_once dirname(__FILE__)."/upload.php";
 ?>

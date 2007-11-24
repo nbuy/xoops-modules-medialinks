@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<{$xoops_langcode}>" lang="<{$xoops_langcode}>">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=<{$xoops_charset}>" />
+<meta http-equiv="content-language" content="<{$xoops_langcode}>" />
+<meta name="robots" content="<{$xoops_meta_robots}>" />
+<meta name="author" content="<{$xoops_meta_author}>" />
+<meta name="copyright" content="<{$xoops_meta_copyright}>" />
+<meta name="generator" content="XOOPS" />
+<title><{$xoops_sitename}> - <{$xoops_pagetitle}></title>
+<link href="<{$xoops_url}>/favicon.ico" rel="SHORTCUT ICON" />
+<link rel="stylesheet" type="text/css" media="screen" href="<{$xoops_url}>/xoops.css" />
+<link rel="stylesheet" type="text/css" media="screen" href="<{$xoops_themecss}>" />
+<!-- RMV: added module header -->
+<{$xoops_module_header}>
+<script type="text/javascript">
+<!--
+<{$xoops_js}>
+//-->
+</script>
+</head>
+<body>
+<h1><{$xoops_pagetitle}> - <{$smarty.const._MD_UPLOADS_PANEL}></h1>
+  <fieldset>
+    <legend><{$smarty.const._MD_UPLOADS_UPFILE}></legend>
+    <form action="uploads.php" method="post" enctype="multipart/form-data" id="upform" onSubmit="this.style.display='none'; xoopsGetElementById('waiting').style.display='block';">
+      <input type="hidden" name="a" id="a" value="<{$target}>" />
+      <input type="hidden" name="mid" id="mid" value="<{$mid}>" />
+      <input type="file" name="imagefile" id="imagefile" size="40" />
+      <input type="submit" class="formButton" name="submit"  id="submit" value="<{$smarty.const._SUBMIT}>" />
+      <p id="flvconv">
+	<input type="checkbox" name="conv" id="submit" value="conv" checked="checked" /> <{$smarty.const._MD_UPLOADS_CONVERT_FLV}>
+	<input type="hidden" name="MAX_FILE_SIZE" value="<{$max_filesize}>" /> &nbsp; <b><{$smarty.const._MD_UPLOADS_MAXSIZE}></b> <{$max_filesize}> <{$smarty.const._MD_UPLOADS_UNITBYTE}>
+      </p>
+      <div id="ext_desc">
+	<b><{$smarty.const._MD_UPLOADS_EXT}></b> <{$upload_ext}>
+      </div>
+    </form>
+    <div id="waiting" style="display:none; font:large bold; text-align: center">
+      <div><img src="images/uploading.gif" alt="Now Uploading ..."/ ></div>
+	<{$smarty.const._MD_UPLOADS_WAITING}>
+    </div>
+  </fieldset>
+</body>
+</html>

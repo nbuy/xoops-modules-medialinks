@@ -1,5 +1,5 @@
 # medialinks module SQL schema
-# $Id: mysql.sql,v 1.1 2006/07/12 16:27:25 nobu Exp $
+# $Id: mysql.sql,v 1.2 2007/11/24 09:49:14 nobu Exp $
 
 # main contents table
 CREATE TABLE medialinks (
@@ -12,7 +12,8 @@ CREATE TABLE medialinks (
     mtime	integer NOT NULL default 0,
     weight	integer NOT NULL default 1,
     poster	integer NOT NULL default 0,
-    hits	integer NOT NULL default 0
+    hits	integer NOT NULL default 0,
+    nacl	integer NOT NULL default 0
 );
 
 # attachement media url
@@ -53,4 +54,13 @@ CREATE TABLE medialinks_fields (
     type	varchar(16) NOT NULL default '',
     def		varchar(60) NOT NULL default '',
     weight	integer NOT NULL default 1
+);
+
+# access capability each user
+# allow access exists record
+CREATE TABLE medialinks_access (
+    auid	integer NOT NULL default '0',
+    amid	integer NOT NULL default '0',
+    writable	ENUM('Y', 'N') NOT NULL default 'N',
+    KEY (auid, amid)
 );

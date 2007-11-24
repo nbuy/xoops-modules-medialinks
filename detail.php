@@ -1,6 +1,6 @@
 <?php
 # Medialinks view a page
-# $Id: detail.php,v 1.1 2006/07/12 16:27:25 nobu Exp $
+# $Id: detail.php,v 1.2 2007/11/24 09:49:13 nobu Exp $
 
 include "../../mainfile.php";
 include_once "functions.php";
@@ -11,6 +11,10 @@ if (!$mid) {
     exit;
 }
 $content = new MediaContent($mid);
+if ($content->getVar('mid')!=$mid) {
+    redirect_header('index.php', 3, _NOPERM);
+    exit;
+}
 $content->hits();
 
 if ($content->getVar('status')!='N') { // deleted content view only admin
@@ -27,10 +31,26 @@ $xoopsOption['template_main'] = 'medialinks_detail.html';
 $xoopsTpl->assign('xoops_pagetitle', htmlspecialchars($xoopsModule->getVar('name')._MD_SEP.$content->getVar('title')));
 $xoopsTpl->assign('fields', $content->dispVars());
 $keyid = isset($_GET['keyid'])?intval($_GET['keyid']):0;
-if (!in_array($keyid, $content->getKeywords())) $keyid=0;
-$xoopsTpl->assign('keypath', $content->keys_path($keyid, 0, true));
-if ($xoopsModuleConfig['use_comment']) {
-    include XOOPS_ROOT_PATH.'/include/comment_view.php';
+$keys =& $content->getKeywords();
+if (!in_array($keyid, $keys)) $keyid=$keys[0];
+$keypath = $content->keys_path($keyid, 0, true);
+$xoopsTpl->assign('keypath', $keypath);
+set_ml_breadcrumbs($keypath, array(array(
+		   'url'=>MODULE_URL.'/detail.php?mid='.$mid,
+		   'name'=>htmlspecialchars($content->getVar('title')))));
+$conf = $xoopsModuleConfig['d3forumid'];
+if ($conf) {
+    $d3id = 0;
+    foreach (explode(',', $conf) as $id) {
+	if (preg_match('/^\d+$/', $id)) {
+	    if ($d3id==0) $d3id = $id;
+	} elseif (preg_match('/^key(\d+)=(\d+)$/', $id, $d)) {
+	    if (in_array($d[1], $keys)) $d3id = $d[2];
+	}
+    }
+    if ($d3id) $xoopsTpl->assign('d3forum_id', $d3id);
 }
+
+include XOOPS_ROOT_PATH.'/include/comment_view.php';
 include XOOPS_ROOT_PATH."/footer.php";
 ?>
