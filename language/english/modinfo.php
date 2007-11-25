@@ -1,6 +1,6 @@
 <?php
 # medialinks module information
-# $Id: modinfo.php,v 1.2 2007/11/24 09:49:14 nobu Exp $
+# $Id: modinfo.php,v 1.3 2007/11/25 07:41:08 nobu Exp $
 
 define("_MI_MEDIALINKS_NAME", "Media Contents");
 define("_MI_MEDIALINKS_DESC", "Display Media Contents And additional information");
@@ -37,7 +37,7 @@ define("_MI_MEDIALINKS_MAXLIST_DSC","List display page displayed contents less t
 define("_MI_MEDIALINKS_LISTSTYLE","Style of Display List");
 define("_MI_MEDIALINKS_LISTSTYLE_DSC","Set index page contents list display style");
 define("_MI_MEDIALINKS_STYLE_SHORT", "Simple");
-define("_MI_MEDIALINKS_STYLE_VERB",  "Describe");
+define("_MI_MEDIALINKS_STYLE_VERB",  "Verbose");
 define("_MI_MEDIALINKS_STYLE_SHOTS", "Screenshots");
 define("_MI_MEDIALINKS_MAXROWS","Maximum count in Rows");
 define("_MI_MEDIALINKS_MAXROWS_DSC","Limit of Title entry listings");
