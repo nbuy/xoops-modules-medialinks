@@ -1,6 +1,6 @@
 <?php
 # Medialinks index page
-# $Id: index.php,v 1.2 2007/11/24 09:49:13 nobu Exp $
+# $Id: index.php,v 1.3 2007/11/25 06:34:37 nobu Exp $
 
 include "../../mainfile.php";
 include_once "functions.php";
@@ -119,40 +119,5 @@ function get_keyword_index($keyid, $isadmin=false) {
     }
     $result['index'] = $index;
     return $result;
-}
-
-function get_contents_list($keyid, $isadmin=false) {
-    global $xoopsDB, $xoopsModuleConfig, $xoopsUser;
-    $res = $xoopsDB->query("SELECT midref FROM ".RELAY." WHERE keyref=".$keyid);
-    $mids = array();
-    while (list($mid) = $xoopsDB->fetchRow($res)) {
-	$mids[] = $mid;
-    }
-    $mids = array_unique($mids);
-    $start = isset($_GET['start'])?intval($_GET['start']):0;
-    $max = $xoopsModuleConfig['max_rows'];
-    $cond = " WHERE status='N'";
-    $order= "weight, mid";
-    $jtbl = MAIN;
-    if (count($mids)) $cond .= " AND mid IN (".join(',', $mids).")";
-    elseif ($keyid) $cond .= " AND 0";
-    else $order = "ctime DESC";
-    if (!$isadmin) {
-	$uid = is_object($xoopsUser)?$xoopsUser->getVar('uid'):0;
-	$jtbl .= " LEFT JOIN ".ACLS." ON amid=mid AND auid=".$uid;
-	$cond .= " AND (nacl=0 OR auid>0)";
-    }
-
-    $res = $xoopsDB->query("SELECT count(mid) FROM $jtbl".$cond);
-    list($n) = $xoopsDB->fetchRow($res);
-    $res = $xoopsDB->query("SELECT mid,title,ctime FROM $jtbl $cond ORDER BY $order", $max, $start);
-
-    $lists = array();
-    while (list($mid, $title, $ctime) = $xoopsDB->fetchRow($res)) {
-	$lists[] = array('mid'=>$mid,
-			 'title'=> htmlspecialchars($title),
-			 'date' => formatTimestamp($ctime, "m"));
-    }
-    return array('count'=>$n, 'lists'=>$lists);
 }
 ?>
