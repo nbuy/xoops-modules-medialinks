@@ -1,6 +1,6 @@
 <?php
 # medialinks common functions
-# $Id: functions.php,v 1.7 2007/11/24 09:49:13 nobu Exp $
+# $Id: functions.php,v 1.8 2007/11/25 06:40:45 nobu Exp $
 
 include_once XOOPS_ROOT_PATH.'/class/xoopsformloader.php';
 include_once "perm.php";
@@ -89,6 +89,15 @@ class KeyWords {
     function getTree() {
 	if (empty($this->keys)) $this->load();
 	return $this->keys;
+    }
+
+    function getPriKeysID() {
+	$keys =& $this->getKeys(0, $this->keys[0]['child']);
+	$ids = array();
+	foreach ($keys as $key) {
+	    $ids[] = $key['keyid'];
+	}
+	return $ids;
     }
 
     function getKeys($types=null, $root=null, $child=true, $level=0) {
@@ -536,7 +545,8 @@ class MediaContent {
 	$myts =& MyTextSanitizer::getInstance();
 	$keys = $this->getKeywords();
 	$mod = is_object($xoopsModule)?$xoopsModule->getVar('mid'):0;
-	$isadmin = $admin&&is_object($xoopsUser)&&$xoopsUser->isAdmin($mod);
+	$isadmin = $admin&& ((is_object($xoopsUser)&&$xoopsUser->isAdmin($mod))
+			     || $this->getVar('writable')=='Y');
 
 	$fields = array('mid'=> $mid = $this->getVar('mid'),
 			'status' => $this->getVar('status'),
@@ -743,7 +753,7 @@ function ml_index_view($order, $trim, $keyid=0, $verb=0, $max=0, $start=0, $fmt=
 
     $dirname = basename(dirname(__FILE__));
     $modurl = XOOPS_URL."/modules/$dirname";
-    $media = array('order'=>preg_replace('/\s.*$/', '', $order),
+    $media = array('order'=>preg_replace('/[\s,].*$/', '', $order),
 		   'count' => $n,
 		   'verbose'=>$verb,
 		   'dirname'=>$dirname,
