@@ -1,6 +1,6 @@
 <?php
 # contents upload script
-# $Id: uploads.php,v 1.2 2007/11/25 06:33:04 nobu Exp $
+# $Id: uploads.php,v 1.3 2007/11/25 07:39:49 nobu Exp $
 
 include "../../mainfile.php";
 include_once "perm.php";
@@ -102,7 +102,7 @@ function ml_image_uploads_file($mid, $field="imagefile", $flv=false) {
 }
 
 function convert_flv($src, $dest) {
-    $logfile = tempnam('/tmp', 'pass');
+    $logfile = tempnam('/tmp', 'ff2pass');
     $opts="-mbd rd -flags +trell -cmp 2 -subcmp 2 -g 100 -pass 1/2 -passlogfile $logfile";
     $qsrc = addslashes($src);
     $qdest = addslashes($dest);
@@ -112,6 +112,7 @@ function convert_flv($src, $dest) {
 	// fall-back no audio
 	system("ffmpeg -i '$qsrc' $opts -an -y '$qdest'");
     }
+    system("rm -f \"$logfile\"*");
     if (filesize($dest)==0) unlink($dest);
     return file_exists($dest);
 }
