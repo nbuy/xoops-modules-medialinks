@@ -1,6 +1,6 @@
 <?php
 # Medialinks view a page
-# $Id: detail.php,v 1.2 2007/11/24 09:49:13 nobu Exp $
+# $Id: detail.php,v 1.3 2007/11/25 06:38:23 nobu Exp $
 
 include "../../mainfile.php";
 include_once "functions.php";
@@ -32,7 +32,18 @@ $xoopsTpl->assign('xoops_pagetitle', htmlspecialchars($xoopsModule->getVar('name
 $xoopsTpl->assign('fields', $content->dispVars());
 $keyid = isset($_GET['keyid'])?intval($_GET['keyid']):0;
 $keys =& $content->getKeywords();
-if (!in_array($keyid, $keys)) $keyid=$keys[0];
+if (count($keys) && !in_array($keyid, $keys)) {
+    $ids = $keywords->getPriKeysID();
+    $keyid = 0;
+    if (count($keys)) {
+	foreach ($keys as $pid) {
+	    if (in_array($pid, $ids)) {
+		$keyid = $pid;
+		break;
+	    }
+	}
+    }
+}
 $keypath = $content->keys_path($keyid, 0, true);
 $xoopsTpl->assign('keypath', $keypath);
 set_ml_breadcrumbs($keypath, array(array(
