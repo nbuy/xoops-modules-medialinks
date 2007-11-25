@@ -1,6 +1,6 @@
 <?php
 # medialinks common functions
-# $Id: functions.php,v 1.8 2007/11/25 06:40:45 nobu Exp $
+# $Id: functions.php,v 1.9 2007/11/25 07:56:58 nobu Exp $
 
 include_once XOOPS_ROOT_PATH.'/class/xoopsformloader.php';
 include_once "perm.php";
@@ -735,6 +735,7 @@ function ml_index_view($order, $trim, $keyid=0, $verb=0, $max=0, $start=0, $fmt=
 	}
 	$mids = array_unique($mids);
 	if (count($mids)) $cond .= " AND mid IN (".join(',', $mids).")";
+	else return array();
     }
     $acl = "";
     if (!$isadmin) {		// check access control
