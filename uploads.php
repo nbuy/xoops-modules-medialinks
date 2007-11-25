@@ -1,6 +1,6 @@
 <?php
 # contents upload script
-# $Id: uploads.php,v 1.1 2007/11/24 09:49:13 nobu Exp $
+# $Id: uploads.php,v 1.2 2007/11/25 06:33:04 nobu Exp $
 
 include "../../mainfile.php";
 include_once "perm.php";
@@ -85,9 +85,9 @@ function ml_image_uploads_file($mid, $field="imagefile", $flv=false) {
 	$fname = preg_replace("/\\.$ext$/", '.flv', $fname);
 	$tofile = "$path/$fname";
 	$base = dirname(__FILE__);
-	$ret = system("sh '$base/conv.sh' '$temp' '$tofile'");
+	$ret = convert_flv($temp, $tofile);
 	unlink($temp);
-	if (!file_exists($tofile)) {
+	if (!$ret) {
 	    $errors[] = _MD_CONVERT_FAIL;
 	    return false;
 	}
@@ -101,4 +101,18 @@ function ml_image_uploads_file($mid, $field="imagefile", $flv=false) {
     return $fname;
 }
 
+function convert_flv($src, $dest) {
+    $logfile = tempnam('/tmp', 'pass');
+    $opts="-mbd rd -flags +trell -cmp 2 -subcmp 2 -g 100 -pass 1/2 -passlogfile $logfile";
+    $qsrc = addslashes($src);
+    $qdest = addslashes($dest);
+
+    system("ffmpeg -i '$qsrc' $opts -y '$qdest'");
+    if (!file_exists($dest) || filesize($dest)==0) {
+	// fall-back no audio
+	system("ffmpeg -i '$qsrc' $opts -an -y '$qdest'");
+    }
+    if (filesize($dest)==0) unlink($dest);
+    return file_exists($dest);
+}
 ?>
