@@ -1,6 +1,6 @@
 <?php
 # medialinks admin language resources
-# $Id: admin.php,v 1.4 2007/11/24 09:49:14 nobu Exp $
+# $Id: admin.php,v 1.5 2007/11/25 06:31:55 nobu Exp $
 
 define("_AM_CONTENTS_ADMIN", "コンテンツの管理");
 define("_AM_CONTENTS_DEL", "コンテンツを削除します");
@@ -33,7 +33,7 @@ define("_AM_KEYWORDS_DESC", "コメント");
 define("_AM_KEYWORDS_REMOVE", "キーワードの削除");
 define("_AM_KEYWORDS_NODETYPE", "キーの使い分け");
 define("_AM_KEYWORDS_COUNT", "キーワードの使用数");
-define("_AM_KEYWORDS_PRINT", "キーワード「%s」は %u 個の使用されています");
+define("_AM_KEYWORDS_PRINT", "キーワード「%s」は %u 個使用されています");
 
 define("_AM_SORT_WEIGHT", "表示順 <span class='fontSmall'>(0=非表示)</span>");
 define("_AM_KEY_NONE", "なし");
