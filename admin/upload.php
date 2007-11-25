@@ -1,6 +1,6 @@
 <?php
 # uploads folder maintainace
-# $Id: upload.php,v 1.1 2007/11/24 09:49:14 nobu Exp $
+# $Id: upload.php,v 1.2 2007/11/25 06:30:54 nobu Exp $
 
 include '../../../include/cp_header.php';
 
@@ -80,7 +80,7 @@ function unit_kiro($v) {
     return $v."K";
 }
 function folder_list($dir) {
-    global $xoopsModuleConfig, $xoopsDB, $sysfile;
+    global $xoopsModuleConfig, $xoopsDB, $sysfile, $uppath;
     if (empty($dir)) {
 	$fp = popen('df -k .', 'r');
 	fgets($fp);		// skip header
@@ -122,7 +122,7 @@ function folder_list($dir) {
 	    $size = $stat['size'];
 	    $mtime = formatTimestamp($stat['mtime']);
 	    $del = sprintf($delinp, $chdir);
-	    $op = "<a href='upload.php?ren=$chdir'>"._AM_FILE_MV."</a>";
+	    $op = preg_match('/^\/\d+$/', $chdir)?"":"<a href='upload.php?ren=$chdir'>"._AM_FILE_MV."</a>";
 	    echo "<tr class='$bg'><td align='center'>$del".
 		"</td><td>$folder</td><td>$anc</td><td>"._AM_FILE_DIR.
 		"</td><td align='right'>$size</td><td>$mtime</td><td>$op</td></tr>\n";
@@ -166,11 +166,9 @@ function folder_list($dir) {
 	$key = preg_replace('/^\/+/', '', $dir);
 	$mid = intval($key);
 	if ($mid) {
-	    global $uppath;
 	    $res = $xoopsDB->query($x="SELECT linkid,url,name,ltype FROM ".$xoopsDB->prefix('medialinks_attach')." WHERE midref=$mid");
 	    while (list($id,$file,$name,$ty) = $xoopsDB->fetchRow($res)) {
 		if (!preg_match('/^(\w+:)?\//', $file)) {
-		    echo "<div>ty=$ty</div>";
 		    $ty = (strtolower($ty)=='a'?"attach":"media");
 		    $used["$uppath/$key/$file"] = "$ty,$id,$name";
 		}
@@ -206,7 +204,7 @@ function folder_list($dir) {
 	    $op = "<a href='upload.php?ren=$myfile'>"._AM_FILE_MV."</a>";
 	    if (isset($types[$type])) {
 		$type = $types[$type];
-		$del = '';
+		$op = $del = '';
 	    }
 	    echo "<tr class='$bg'><td align='center'>$del</td><td>$icon</td><td>$anc</td><td>$type</td><td align='right'>$size</td><td>$mtime</td><td>$op</td></tr>\n";
 	}
