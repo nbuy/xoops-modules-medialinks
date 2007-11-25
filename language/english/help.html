@@ -14,12 +14,29 @@ td,th { padding: 4px; background: #e8e8e8;}
 <style>
 .note { color: #800000; }
 </style>
-  <h2>Media Contents Management</h2>
+  <h1>MediaLinks - a Video contents module</h1>
+
+  medialinks is a module for video materials (wmv, mov, etc). This module work display arrange videos and show it.
+
+  <ul>
+    <li><a href="#contents">Media Contents Management</a></li>
+    <li><a href="#keywords">Keywords Management</a></li>
+    <li><a href="#feilds">Fields Management</a></li>
+    <li><a href="#upload">Uploads folder Management</a></li>
+    <li><a href="#summary">Access Summary</a></li>
+    <li><a href="#links">Links in a content</a></li>
+    <li><a href="#server">Server Settings</a></li>
+    <li><a href="#preferences">Module Settings</a></li>
+    <li><a href="#changes">Changes</a></li>
+  </ul>
+  <hr />
+
+  <a name="contents"></a><h2>Media Contents Management</h2>
 
   Display list all in this module keep conents.
   <p>In this page, manipulating contents status.</p>
 
-  <h2>Keywords Management</h2>
+  <a name="keywords"></a><h2>Keywords Management</h2>
 
   Keywords constract contnets indexes keywords for directory.
   It organized in tree stracture, defined restraction each other.
@@ -31,7 +48,7 @@ td,th { padding: 4px; background: #e8e8e8;}
     <li>In contents entry form, enable JavaScript selecting follow relation. Disable JavaScript, expand all of tree keywords</li>
   </ul>
 
-  <h2>Fields Management</h2>
+  <a name="feilds"></a><h2>Fields Management</h2>
 
   <p>Conetnts can be add extra informantion feilds</p>
 
@@ -49,9 +66,21 @@ td,th { padding: 4px; background: #e8e8e8;}
     </li>
   </ul>
 
-  <h2>Links</h2>
+  <a name="upload"></a><h2>Uploads folder Management</h2>
+
+  Display and manipulate uploads folder for this module.
+  Some folders and files can not delete or rename operation for safe.
+  You want to remove that file, you need use contents edit.
+
+  <a name="summary"></a><h2>Access Summary</h2>
+
+  Summmary of reference count via medialinks/track.php script.
+
+  <a name="links"></a><h2>Links in a content</h2>
 
   <p>Media and Attachiment Documents are expand some tags that sence of URL extention. (see template medialinks_item.html)</p>
+
+  <p>When set relative path file name, that is mean URL as <tt><i>XOOPS_URL</i>/uploads/<b>medialinks</b>/9999/<b>filename</b></tt> (<tt>medialinks</tt> folder set module preferences, 9999 mean contents ID). Usualy, this relative path file name setting automatically by uploads panel.</p>
 
   <p>Also open via track.php script, that change output style to change following condition.</p>
 
@@ -69,11 +98,20 @@ td,th { padding: 4px; background: #e8e8e8;}
     <dd>Redirecting setting URL.</dd>
   </dl>
 
-  <h2>Access Summary</h2>
+  <a name="server"></a><h2>Server Settings</h2>
 
-  Summmary of reference count via medialinks/track.php script.
+  <ul>
+    <li>
+      You need take care, there is some limitation large size file upload.
+      For example, in PHP language setting next value in <tt>/etc/php.ini</tt>.
+      <ul>
+	<li><tt>post_max_size = 8M</tt></li>
+	<li><tt>upload_max_filesize = 2M</tt></li>
+      </ul>
+    </li>
+  </ul>
 
-  <h2>Module Settings</h2>
+  <a name="preferences"></a><h2>Module Settings</h2>
 
   <blockquote>
     <table border="0" cellspacing="1" cellpadding="4" class="outer">
@@ -99,29 +137,83 @@ td,th { padding: 4px; background: #e8e8e8;}
 	<td>List display page displayed contents less than this settings</td>
       </tr>
       <tr class="even">
+        <th align="left">Style of Display List</th>
+	<td><u>Simple</u>/Verbose/Screenshots</td>
+	<td>Set index page contents list display style</td>
+      </tr>
+      <tr class="odd">
         <th align="left">Maximum count in Rows</th>
 	<td>Rows (<u>50</u>)</td>
 	<td>Limit of Title entry listings</td>
       </tr>
-      <tr class="odd">
+      <tr class="even">
         <th align="left">Need Approve</th>
 	<td>Yes/<u>No</u></td>
 	<td>New contenets need approve by contents admin</td>
       </tr>
+      <tr class="odd">
+        <th align="left">User Access Control</th>
+	<td><u>YES</u>/NO</td>
+	<td>Allow user access control for each content</td>
+      </tr>
       <tr class="even">
-        <th align="left">Allow comments</th>
-	<td><u>Yes</u>/No</td>
-	<td>
-	Contents can be comment by user.
-	<p class="note">Following XOOPS standard comment settings.</p>
+        <th align="left">Upload Groups</th>
+	<td>Groups (<u>Register Users</u>)</td>
+	<td>Allow groups to upload media files</td>
+      </tr>
+      <tr class="odd">
+        <th align="left">Uploads folder</th>
+	<td>Folder (<u>medialinks</u>)</td>
+	<td>Set folder for upload file to store. When set relative path, The root assume XOOPS_UPLOAD_PATH (/uploads).</td>
+      </tr>
+      <tr class="even">
+        <th align="left">Uploadable Extentions</th>
+	<td> (<u>gif|jpg|png|avi|mov...</u>)</td>
+	<td>Set allow upload file extentions. Extention delmiter is '|'.</td>
+      </tr>
+      <tr class="odd">
+        <th align="left">Thumbnail image options</th>
+	<td>option strings (<u>-ss 5</u>)</td>
+	<td>Option argument for 'ffmpeg' to make screenshots. (e.g. <tt>-ss 5</tt> take screenshot 5 seconds after)</td>
+      </tr>
+      <tr class="even">
+        <th align="left">d3forum ID</th>
+	<td>List of IDs</td>
+	<td>Set forumid when using comment with 'd3forum' module. When empty this option, using XOOPS comments. Example: <tt>1,key1=2,key3=3</tt> (keyXX mean keywords ID in medialinks, determin last match if multiple keywords. only numeric term post otherwise)
+        <p class="note">
+	  Using d3forum, You need set "Format for comment-integration" in forum settings. <br/>
+	  Setting value: <tt>{XOOPS_URL}/modules/medialinks/detail.php?mid=%s</tt>
+	</p>
 	</td>
+      </tr>
+      <tr class="odd">
+        <td colspan="3" class="note">Following XOOPS standard comment settings.</td>
       </tr>
     </table>
   </blockquote>
 
+  <a name="changes"></a><h2>¹¹¿·ÍúÎò</h2>
+
+  <dl>
+    <dt>2006-11-26 medialinks 2.0</dt>
+    <dt>2006-11-18 medialinks 1.01a</dt>
+    <dd>
+      <ul>
+	<li>Fix syntax error in english resource(thx gigamaster)</li>
+      </ul>
+    </dd>
+    <dt>2006-07-28 medialinks 1.01</dt>
+    <dd>
+      <ul>
+	<li>fix some bugs</li>
+      </ul>
+    </dd>
+    <dt>2006-07-24 medialinks 1.0</dt>
+  </dl>
+
   <hr>
 <address>Nobuhiro Yasutomi &lt;<a href="mailto:nobuhiro.yasutomi@nifty.ne.jp">nobuhiro.yasutomi@nifty.ne.jp</a>&gt;</address>
 My Site Users <a href="http://mysite.ddo.jp/">http://mysite.ddo.jp/</a><br/>
-$Id: help.html,v 1.1 2006/07/22 05:36:41 nobu Exp $
+$Id: help.html,v 1.2 2007/11/25 07:59:40 nobu Exp $
 </body>
 </html>

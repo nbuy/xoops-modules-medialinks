@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html languagee="ja">
 <head>
-<title>映像コンテンツモジュール</title>
+<title>映像コンテンツ (medialinks)</title>
 <style>
 .outer { background-color: #808080; }
 td,th { padding: 4px; background: #e8e8e8;}
@@ -14,12 +14,28 @@ td,th { padding: 4px; background: #e8e8e8;}
 <style>
 .note { color: #800000; }
 </style>
-  <h2>コンテンツの管理</h2>
+  <h1>映像コンテンツ (medialinks)</h1>
+
+  映像コンテンツ (medialinks) は、ビデオ素材 (wmv/mov など) を表示閲覧するためのモジュールである。
+  <ul>
+    <li><a href="#contents">コンテンツの管理</a></li>
+    <li><a href="#keywords">キーワードの管理</a></li>
+    <li><a href="#feilds">フィールドの管理</a></li>
+    <li><a href="#upload">アップロード管理</a></li>
+    <li><a href="#summary">アクセス数</a></li>
+    <li><a href="#links">コンテンツでのリンクの扱い</a></li>
+    <li><a href="#server">サーバーの設定</a></li>
+    <li><a href="#preferences">一般設定</a></li>
+    <li><a href="#changes">更新履歴</a></li>
+  </ul>
+  <hr />
+
+  <a name="contents"></a><h2>コンテンツの管理</h2>
 
   現在保持するコンテンツの一覧を表示する。
   <p>この管理画面では、コンテンツの表示状態の指定を行う。</p>
 
-  <h2>キーワードの管理</h2>
+  <a name="keywords"></a><h2>キーワードの管理</h2>
 
   コンテンツの索引を構成するキーワードの管理を行う。
   キーワードは、属性を持ったツリー構造で構成され、
@@ -31,7 +47,7 @@ td,th { padding: 4px; background: #e8e8e8;}
     <li>コンテンツの入力フォームにおいて、JavaScript が有効な場合、連携関係を用いてキーワード選択範囲が絞り込まれる。JavaScriptが無効の場合、動的な絞り込みは行われず、全ての選択肢が選択対象になる。</li>
   </ul>
 
-  <h2>フィールドの管理</h2>
+  <a name="feilds"></a><h2>フィールドの管理</h2>
 
   <p>コンテンツには、任意数の付属情報を付加することができる。</p>
 
@@ -53,18 +69,31 @@ td,th { padding: 4px; background: #e8e8e8;}
     </li>
   </ul>
 
-  <h2>リンク</h2>
+  <a name="upload"></a><h2>アップロード管理</h2>
+
+  medialinks 用のアップロードフォルダの確認や操作を行う。
+  誤操作防止のため、数字のみのディレクトリの名称変更や、
+  メディア/添付で指定されているファイルの操作は制限されている。
+  メディア/添付指定されたファイルの操作は、コンテンツ側の編集により行う。
+
+  <a name="summary"></a><h2>アクセス数</h2>
+
+  medialinks/track.php を介して参照されたリンクの参照回数を表示する。
+
+  <a name="links"></a><h2>コンテンツでのリンクの扱い</h2>
 
   <p>メディアのリンク/添付ファイルは、基本的には指定した URL の示す
   ファイルの拡張子やタイトルを使って様々な形式に展開することで表
   現される。</p>
 
+  <p>相対パスによるファイル名を指定した場合、<tt><i>XOOPS_URL</i>/uploads/<b>medialinks</b>/9999/<b>ファイル名</b></tt> (medialinks はモジュールの一般設定による、9999 はコンテンツIDを示す) と言う形式の URL を示す。通常、このパス設定はアップロードパネルによる操作を介して指定される。</p>
+
   <p>track.php 経由でファイルを開く場合、次の条件で特有のファイ
   ル形式を出力する。</p>
 
   <dl>
-    <dt><b>iPod</b>/<b>iTunes</b> を名称に指定する</dt>
-    <dd>iTunes 用の RSS 形式 (text/xml) で出力する。<br/>
+    <dt><b>iPod</b>/<b>iTunes</b> 含むを名称に指定する</dt>
+    <dd>iTunes 用の RSS 形式 (text/xml) で出力する。名称の例「授業風景(iPod)」<br/>
     テンプレート名: medialinks_rss.xml</dd>
     <dt>URL の拡張子が <b>.wmv</b> または <b>.avi</b></dt>
     <dd>Windows Mediaストリーミングファイル (video/x-ms-asf)
@@ -74,17 +103,13 @@ td,th { padding: 4px; background: #e8e8e8;}
     <dd>QuickTime のメタファイル (application/x-quicktimeplayer)
     として出力する。<br/>
     テンプレート名: medialinks_track.qtl</dd>
+    <dt>URL の拡張子が <b>.flv</b></dt>
+    <dd>Flash Video 形式で flvplayer.swf を付与した URL にリダイレクト (表示) する。</dd>
     <dt>その他</dt>
     <dd>指定 URL へ直接リダイレクトする</dd>
   </dl>
 
-  <h2>アクセス数</h2>
-
-  medialinks/track.php を介して参照されたリンクの参照回数を表示する。
-
-  <h2>d3forum のコメント統合</h2>
-
-  <h2>サーバーの設定</h2>
+  <a name="server"></a><h2>サーバーの設定</h2>
 
   <ul>
     <li>サイズの大きいファイルのアップロードでは安全のため様々な
@@ -97,7 +122,7 @@ td,th { padding: 4px; background: #e8e8e8;}
     </li>
   </ul>
 
-  <h2>一般設定</h2>
+  <a name="preferences"></a><h2>一般設定</h2>
 
   <blockquote>
     <table border="0" cellspacing="1" cellpadding="4" class="outer">
@@ -105,7 +130,7 @@ td,th { padding: 4px; background: #e8e8e8;}
       <tr class="even">
         <th align="left">登録を許可するグループ</th>
         <td>グループ (<u>登録ユーザ</u>)</td>
-	<td>コンテンツの新規登録や作成者による編集を許可するグループを指定する</td>
+	<td>コンテンツの新規登録や作成者による編集を許可するグループを選択する</td>
       </tr>
       <tr class="odd">
         <th align="left">新規登録の際にメールで知らせる</th>
@@ -123,29 +148,93 @@ td,th { padding: 4px; background: #e8e8e8;}
 	<td>一括表示で画面に並べるコンテンツの最大数を指定する</td>
       </tr>
       <tr class="even">
+        <th align="left">一覧表示のスタイル</th>
+	<td><u>短く</u>/詳しく/画像付き</td>
+	<td>一覧ページで表示するコンテンツの表示形式を指定する</td>
+      </tr>
+      <tr class="odd">
         <th align="left">一覧表示で表示する行数</th>
 	<td>行数 (<u>50</u>)</td>
 	<td>タイトル一覧を表示するコンテンツの最大数を指定する</td>
       </tr>
-      <tr class="odd">
+      <tr class="even">
         <th align="left">コンテンツ掲載には承認が必要</th>
 	<td>はい/<u>いいえ</u></td>
 	<td>新規登録されたコンテンツの掲載には管理者の承認を必要とする</td>
       </tr>
-      <tr class="even">
-        <th align="left">コメント機能を有効にする</th>
+      <tr class="odd">
+        <th align="left">個別アクセス設定</th>
 	<td><u>はい</u>/いいえ</td>
-	<td>
-	コンテンツに対するコメント機能を有効にする
-	<p class="note">以下XOOPS の標準のコメント機能に対する設定</p>
+	<td>コンテンツ毎にユーザのアクセス権を設定可能にする</td>
+      </tr>
+      <tr class="even">
+        <th align="left">アップロードの許可</th>
+	<td>グループ (<u>登録ユーザ</u>)</td>
+	<td>ユーザにメディアファイルのアップロードを許可する</td>
+      </tr>
+      <tr class="odd">
+        <th align="left">アップロードフォルダ</th>
+	<td>フォルダ名 (<u>medialinks</u>)</td>
+	<td>ファイルのアップロードする先を指定する。相対パスを指定した場合、XOOPS_UPLOAD_PATH (/uploads) を起点とする。</td>
+      </tr>
+      <tr class="even">
+        <th align="left">アップロード拡張子</th>
+	<td>拡張子リスト (<u>gif|jpg|png|avi|mov...</u>)</td>
+	<td>アップロードを許可するファイルの拡張子を '|' 区切りで指定する。</td>
+      </tr>
+      <tr class="odd">
+        <th align="left">サムネイル作成オプション</th>
+	<td>オプション文字列 (<u>-ss 5</u>)</td>
+	<td>サムネイル画像を作成する場合の ffmpeg に追加するオプションがあれば指定する。(例: -ss 5 なら 5 秒後を取り出す)</td>
+      </tr>
+      <tr class="even">
+        <th align="left">d3forumのID指定</th>
+	<td>IDのリスト</td>
+	<td>コメントに d3forum を使う場合、対応するフォーラムのIDを指定する。空なら XOOPS のコメントシステムを使う。例: 1,key1=2,key3=3 (keyXXで対応するキーIDを示し、複数ある場合最後のもの有効。指定がない数字はそれ以外)
+        <p class="note">
+	  d3forum を使う場合、フォーラムの設定の「コメント統合時の参照方法」で戻りリンクの設定を行う。<br/>
+	  設定値: <tt>{XOOPS_URL}/modules/medialinks/detail.php?mid=%s</tt>
+	</p>
 	</td>
+      </tr>
+      <tr class="odd">
+        <td colspan="3" class="note">以下XOOPS の標準のコメント機能に対する設定</td>
       </tr>
     </table>
   </blockquote>
 
+  <a name="changes"></a><h2>更新履歴</h2>
+
+  <dl>
+    <dt>2006-11-26 medialinks 2.0</dt>
+    <dd>
+      <ul>
+	<li>コンテンツのユーザ別アクセス権を設定可能にした</li>
+	<li>ファイルのアップロード機能を追加</li>
+	<li>一覧表示やブロックで画面付き表示をサポート</li>
+	<li>Flash Video 形式に対応</li>
+	<li>管理者用アップロード管理 (admin/upload.php)</li>
+	<li>テンプレート管理、ブロック管理 (altsys)</li>
+      </ul>
+    </dd>
+    <dt>2006-11-18 medialinks 1.01a</dt>
+    <dd>
+      <ul>
+	<li>英語リソースの文法ミスを修正 (thx gigamaster)</li>
+      </ul>
+    </dd>
+    <dt>2006-07-28 medialinks 1.01</dt>
+    <dd>
+      <ul>
+	<li>バグの修正</li>
+      </ul>
+    </dd>
+    <dt>2006-07-24 medialinks 1.0</dt>
+  </dl>
+
   <hr>
 <address>安富 伸浩 &lt;<a href="mailto:nobuhiro.yasutomi@nifty.ne.jp">nobuhiro.yasutomi@nifty.ne.jp</a>&gt;</address>
 マイサイト ユーザーズ <a href="http://mysite.ddo.jp/">http://mysite.ddo.jp/</a><br/>
-$Id: help.html,v 1.7 2007/11/24 09:49:14 nobu Exp $
+$Id: help.html,v 1.8 2007/11/25 07:59:40 nobu Exp $
 </body>
 </html>
