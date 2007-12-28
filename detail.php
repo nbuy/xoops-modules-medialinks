@@ -1,6 +1,6 @@
 <?php
 # Medialinks view a page
-# $Id: detail.php,v 1.3 2007/11/25 06:38:23 nobu Exp $
+# $Id: detail.php,v 1.4 2007/12/28 15:17:34 nobu Exp $
 
 include "../../mainfile.php";
 include_once "functions.php";
@@ -35,9 +35,10 @@ $keys =& $content->getKeywords();
 if (count($keys) && !in_array($keyid, $keys)) {
     $ids = $keywords->getPriKeysID();
     $keyid = 0;
+
     if (count($keys)) {
-	foreach ($keys as $pid) {
-	    if (in_array($pid, $ids)) {
+	foreach ($ids as $pid) {
+	    if (in_array($pid, $keys)) {
 		$keyid = $pid;
 		break;
 	    }
