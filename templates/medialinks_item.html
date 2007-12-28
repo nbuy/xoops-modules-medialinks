@@ -13,7 +13,11 @@
   <{if preg_match("/\\.(wmv|avi)\$/i", $link.url)}>
   <embed src="<{$link.url}>" width="320" height="256" alt="<{$link.name}>" autostart="false"/>
   <{elseif preg_match("/\\.mov\$/i", $link.url)}>
-  <embed src="<{$link.url}>" qtsrc="<{$link.url|replace:'http:':'rtsp:'}>" width="320" height="256" controller="true" alt="<{$link.name}>" autoplay="false"/>
+    <{*
+      <!-- example tag for using streaming protocol -->
+      <embed src="<{$link.url}>" qtsrc="<{$link.url|replace:'http:':'rtsp:'}>" width="320" height="256" controller="true" alt="<{$link.name}>" autoplay="false"/>
+      *}>
+  <embed src="<{$link.url}>" qtsrc="<{$link.url}>" width="320" height="256" controller="true" alt="<{$link.name}>" autoplay="false" kioskmode="true"/>
   <{elseif preg_match("/\\.flv\$/i", $link.url)}>
   <embed src="flvplayer.swf" width="320" height="256" 
 type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" 

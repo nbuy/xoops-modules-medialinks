@@ -1,6 +1,6 @@
 <?php
 # medialinks common functions
-# $Id: functions.php,v 1.9 2007/11/25 07:56:58 nobu Exp $
+# $Id: functions.php,v 1.10 2007/12/28 08:39:08 nobu Exp $
 
 include_once XOOPS_ROOT_PATH.'/class/xoopsformloader.php';
 include_once "perm.php";
@@ -228,8 +228,9 @@ class MediaContent {
     var $access = array();
 
     function MediaContent($id=0) {
-	global $xoopsModuleConfig;
+	global $xoopsModuleConfig, $xoopsUser;
 	$this->vars['status'] = $xoopsModuleConfig['postauth']?'W':'N';
+	$this->vars['poster']=is_object($xoopsUser)?$xoopsUser->getVar('uid'):0;
 	if ($id) $this->load($id);
     }
 
@@ -359,7 +360,6 @@ class MediaContent {
 	if (empty($vars['mid'])) { // new entry
 	    unset($vars['mid']);
 	    $vars['ctime']=$vars['mtime']=time();
-	    $vars['poster']=is_object($xoopsUser)?$xoopsUser->getVar('uid'):0;
 	    $fields = join(',', array_keys($vars));
 	    $values = join(',', array_map('dbquote', $vars));
 	    $res = $xoopsDB->query("INSERT INTO ".MAIN."($fields) VALUES($values)");
@@ -693,6 +693,7 @@ function set_ml_breadcrumbs($keypath=array(), $adds=array()) {
     $breadcrumbs = array();
     $breadcrumbs[] = array('url'=>MODULE_URL.'/',
 			   'name'=>$xoopsModule->getVar('name'));
+    if (empty($keypath)) return;
     foreach ($keypath as $key) {
 	$breadcrumbs[]=array('url'=>MODULE_URL.'/index.php?keyid='.$key['keyid'],
 			     'name'=>$key['name']);

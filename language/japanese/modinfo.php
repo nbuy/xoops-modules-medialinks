@@ -1,6 +1,6 @@
 <?php
 # medialinks module information
-# $Id: modinfo.php,v 1.6 2007/11/24 09:49:14 nobu Exp $
+# $Id: modinfo.php,v 1.7 2007/12/28 08:39:08 nobu Exp $
 
 define("_MI_MEDIALINKS_NAME", "映像コンテンツ");
 define("_MI_MEDIALINKS_DESC", "ビデオ映像などのコンテンツ情報を閲覧する");
@@ -25,6 +25,7 @@ define("_MI_MEDIALINKS_LIST_TPL", "コンテンツの一括表示");
 define("_MI_MEDIALINKS_LISTSHOTS_TPL", "画面付きの一覧表示");
 define("_MI_MEDIALINKS_OPERATE_TPL", "コンテンツの操作");
 define("_MI_MEDIALINKS_UPLOADS_TPL", "アップロードパネル");
+define("_MI_MEDIALINKS_COMMENT_TPL", "拡張コメントテンプレート (d3forum)");
 define("_MI_MEDIALINKS_RSS_TPL", "RSS(iTunes) 形式の配信用");
 define("_MI_MEDIALINKS_ASX_TPL", "WMV(AVI) 形式のリンク起動用");
 define("_MI_MEDIALINKS_QTL_TPL", "QuickTime 形式のリンク起動用");
@@ -55,10 +56,14 @@ define("_MI_MEDIALINKS_UPLOADPATH","アップロードフォルダ");
 define("_MI_MEDIALINKS_UPPATH_DSC","ファイルのアップロードする先を指定する。相対パスを指定した場合、XOOPS_UPLOAD_PATH (/uploads) を起点とする。");
 define("_MI_MEDIALINKS_UPLOADEXT","アップロード拡張子");
 define("_MI_MEDIALINKS_UPEXT_DSC","アップロードを許可するファイルの拡張子を '|' 区切りで指定する。");
+define("_MI_MEDIALINKS_CMDPATH","コマンド検索パス");
+define("_MI_MEDIALINKS_CMDPATH_DC","利用する外部コマンド (ffmpeg, convert など) の実行ファイルが標準以外に置かれている場合パスを指定する。(例: <tt>/usr/local/bin:/usr/bin</tt>)");
+define("_MI_MEDIALINKS_CONVOPTS","FLV変換オプション");
+define("_MI_MEDIALINKS_COPTS_DC","動画ファイル FLV 形式に変換する際に ffmpeg に与えるオプションを指定する。(例: <tt>-mbd rd -flags +trell -cmp 2 -subcmp 2 -g 100 -pass 1/2</tt>)");
 define("_MI_MEDIALINKS_SHOTOPTS","サムネイル作成オプション");
 define("_MI_MEDIALINKS_SOPTS_DC","サムネイル画像を作成する場合の ffmpeg に追加するオプションがあれば指定する。(例: <tt>-ss 5</tt> なら 5 秒後を取り出す)");
 define("_MI_MEDIALINKS_D3FORUMID","d3forumのID指定");
-define("_MI_MEDIALINKS_D3ID_DESC","コメントに d3forum を使う場合、対応するフォーラムのIDを指定する。空なら XOOPS のコメントシステムを使う。例: <tt>1,key1=2,key3=3</tt> (keyXXで対応するキーIDを示し、複数ある場合最後のもの有効。指定がない数字はそれ以外)");
+define("_MI_MEDIALINKS_D3ID_DESC","コメントに d3forum を使う場合、対応するフォーラムのIDを指定する。空なら XOOPS のコメントシステムを使う。例: <tt>1,key1=2,key3=3</tt> (keyXXで対応するキーIDを示し、複数ある場合最後に一致したが有効。指定がない数字はそれ以外)");
 
 // Notifications
 define('_MI_MEDIALINKS_GLOBAL_NOTIFY', 'モジュール全体');

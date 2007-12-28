@@ -8,11 +8,9 @@
 <{/if}>
 <{include file="db:medialinks_item.html"}>
 
-<{if $d3forum_id}>
+<{if !empty($d3forum_id)}>
 <!-- D3Forum's comment system -->
-<div class="comments">
-<{d3forum_comment dirname=d3forum forum_id=$d3forum_id itemname="mid" subject=$fields.title}>
-</div>
+<{include file="db:medialinks_comment.html"}>
 <{elseif $commentsnav}>
 <!-- XOOPS common comment system -->
 <div style="text-align:center; margin-top:2em; margin-bottom:1em;">

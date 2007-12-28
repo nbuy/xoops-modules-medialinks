@@ -1,6 +1,6 @@
 <?php
 # contents upload script
-# $Id: uploads.php,v 1.3 2007/11/25 07:39:49 nobu Exp $
+# $Id: uploads.php,v 1.4 2007/12/28 08:39:08 nobu Exp $
 
 include "../../mainfile.php";
 include_once "perm.php";
@@ -74,7 +74,7 @@ function ml_image_uploads_file($mid, $field="imagefile", $flv=false) {
 	return false;
     }
     $path = get_upload_path($mid);
-    if (!preg_match('/^\//', $path)) $path = XOOPS_UPLOAD_PATH."/".$path;
+    if (!preg_match('/^([a-z]:)?\//i', $path)) $path = XOOPS_UPLOAD_PATH."/".$path;
     if (!is_dir(dirname($path))) mkdir(dirname($path));
     if (!is_dir($path)) mkdir($path);
     $temp = $upfile['tmp_name'];
@@ -102,18 +102,21 @@ function ml_image_uploads_file($mid, $field="imagefile", $flv=false) {
 }
 
 function convert_flv($src, $dest) {
+    global $mlModuleConfig;
     $logfile = tempnam('/tmp', 'ff2pass');
-    $opts="-mbd rd -flags +trell -cmp 2 -subcmp 2 -g 100 -pass 1/2 -passlogfile $logfile";
-    $qsrc = addslashes($src);
+    $opts=$mlModuleConfig['convopts']." -passlogfile $logfile";
+    $cmdpath=$mlModuleConfig['cmdpath'];
+    if (!empty($cmdpath)) putenv("PATH=$cmdpath");
+    $qsrc = $src;
     $qdest = addslashes($dest);
 
-    system("ffmpeg -i '$qsrc' $opts -y '$qdest'");
+    system("ffmpeg -i \"$qsrc\" $opts -y \"$qdest\"");
     if (!file_exists($dest) || filesize($dest)==0) {
 	// fall-back no audio
-	system("ffmpeg -i '$qsrc' $opts -an -y '$qdest'");
+	system("ffmpeg -i \"$qsrc\" $opts -an -y \"$qdest\"");
     }
     system("rm -f \"$logfile\"*");
-    if (filesize($dest)==0) unlink($dest);
+    if (file_exists($dest) && filesize($dest)==0) unlink($dest);
     return file_exists($dest);
 }
 ?>

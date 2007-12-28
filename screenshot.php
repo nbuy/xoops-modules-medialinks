@@ -1,6 +1,6 @@
 <?php
 # make video screenshot/thumbnail image
-# $Id: screenshot.php,v 1.1 2007/11/24 09:49:13 nobu Exp $
+# $Id: screenshot.php,v 1.2 2007/12/28 08:39:08 nobu Exp $
 
 require_once dirname(__FILE__)."/perm.php";
 
@@ -23,11 +23,14 @@ function ml_screenshot($mid) {
 	    $vfile = get_upload_path($mid, $url);
 	}
 	if (file_exists($vfile)) {
-	    $opts = $GLOBALS['mlModuleConfig']['shotopts'];
+	    global $mlModuleConfig; // NOTE: this script refer from blocks
+	    $opts = $mlModuleConfig['shotopts'];
+	    $cmdpath=$mlModuleConfig['cmdpath'];
+	    if (!empty($cmdpath)) putenv("PATH=$cmdpath");
 	    if (preg_match(_VIDEO_EXT, $vfile)) {
-		system("ffmpeg -i '$vfile' $opts -vcodec mjpeg -vframes 1 -an -f rawvideo -y '$path'");
+		system("ffmpeg -i \"$vfile\" $opts -vcodec mjpeg -vframes 1 -an -f rawvideo -y \"$path\"");
 	    } elseif (preg_match(_IMAGE_EXT, $vfile)) {
-		system("convert '$vfile' -resize 320 '$path'");
+		system("convert \"$vfile\" -resize 320 \"$path\"");
 	    }
 	    if (filesize($path)==0) unlink($path);
 	}

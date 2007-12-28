@@ -1,6 +1,6 @@
 <?php
 # medialinks module information
-# $Id: modinfo.php,v 1.3 2007/11/25 07:41:08 nobu Exp $
+# $Id: modinfo.php,v 1.4 2007/12/28 08:39:08 nobu Exp $
 
 define("_MI_MEDIALINKS_NAME", "Media Contents");
 define("_MI_MEDIALINKS_DESC", "Display Media Contents And additional information");
@@ -55,6 +55,10 @@ define("_MI_MEDIALINKS_UPLOADPATH","Uploads folder");
 define("_MI_MEDIALINKS_UPPATH_DSC","Set folder for upload file to store. When set relative path, The root assume XOOPS_UPLOAD_PATH (/uploads).");
 define("_MI_MEDIALINKS_UPLOADEXT","Uploadable Extentions");
 define("_MI_MEDIALINKS_UPEXT_DSC","Set allow upload file extentions. Extention delmiter is '|'.");
+define("_MI_MEDIALINKS_CMDPATH","Command search path");
+define("_MI_MEDIALINKS_CCMD_DSC","Setting external command (using ffmpeg, convert, etc) search path when not exist default path. (example: <tt>/usr/local/bin:/usr/bin</tt>)");
+define("_MI_MEDIALINKS_CONVOPTS","FLV convert options");
+define("_MI_MEDIALINKS_COPTS_DC","Set ffmpeg options when use movie file convert to FLV formats. (example: <tt>-mbd rd -flags +trell -cmp 2 -subcmp 2 -g 100 -pass 1/2</tt>)");
 define("_MI_MEDIALINKS_SHOTOPTS","Thumbnail image options");
 define("_MI_MEDIALINKS_SOPTS_DC","Option argument for 'ffmpeg' to make screenshots. (e.g. <tt>-ss 5</tt> take screenshot 5 seconds after)");
 define("_MI_MEDIALINKS_D3FORUMID","d3forum ID");

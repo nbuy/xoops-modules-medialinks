@@ -1,10 +1,10 @@
 <?php
 // MediaLinks - Multimedia Contents Holder Module
-// $Id: xoops_version.php,v 1.10 2007/11/25 07:59:40 nobu Exp $
+// $Id: xoops_version.php,v 1.11 2007/12/28 08:39:08 nobu Exp $
 
 $modversion=array(
     'name'	=> _MI_MEDIALINKS_NAME,
-    'version'	=> "1.98",
+    'version'	=> "2.0",
     'description'=> _MI_MEDIALINKS_DESC,
     'credits'	=> "Nobuhiro Yasutomi",
     'author'	=> "Nobuhiro Yasutomi",
@@ -49,6 +49,8 @@ $modversion['templates'][]=array('file' => 'medialinks_operate.html',
 				 'description' => _MI_MEDIALINKS_OPERATE_TPL);
 $modversion['templates'][]=array('file' => 'medialinks_uploads.html',
 				 'description' => _MI_MEDIALINKS_UPLOADS_TPL);
+$modversion['templates'][]=array('file' => 'medialinks_comment.html',
+				 'description' => _MI_MEDIALINKS_COMMENT_TPL);
 
 $modversion['templates'][]=array('file' => 'medialinks_rss.xml',
 				 'description' => _MI_MEDIALINKS_RSS_TPL);
@@ -69,7 +71,7 @@ $modversion['blocks'][1]=array(
     'description' => _MI_MEDIALINKS_BLOCK_NEW_DESC,
     'show_func' => 'b_medialinks_show',
     'edit_func' => 'b_medialinks_edit',
-    'options' => 'ctime|5|32||0',
+    'options' => 'ctime|5|32||3',
     'template' => 'medialinks_block.html');
 
 $modversion['blocks'][]= array(
@@ -190,6 +192,20 @@ $modversion['config'][]=array(
     'formtype' => 'text',
     'valuetype' => 'string',
     'default' => 'gif|jpg|png|avi|mov|wmv|mp4|flv|doc|xls|ods|odt|pdf');
+$modversion['config'][]=array(
+    'name' => 'cmdpath',
+    'title' => '_MI_MEDIALINKS_CMDPATH',
+    'description' => '_MI_MEDIALINKS_CMDPATH_DC',
+    'formtype' => 'text',
+    'valuetype' => 'string',
+    'default' => '');
+$modversion['config'][]=array(
+    'name' => 'convopts',
+    'title' => '_MI_MEDIALINKS_CONVOPTS',
+    'description' => '_MI_MEDIALINKS_COPTS_DC',
+    'formtype' => 'text',
+    'valuetype' => 'string',
+    'default' => '');
 $modversion['config'][]=array(
     'name' => 'shotopts',
     'title' => '_MI_MEDIALINKS_SHOTOPTS',

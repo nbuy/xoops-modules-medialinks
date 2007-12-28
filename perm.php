@@ -1,6 +1,6 @@
 <?php
 # check permition for edit
-# $Id: perm.php,v 1.1 2007/11/24 09:49:13 nobu Exp $
+# $Id: perm.php,v 1.2 2007/12/28 08:39:08 nobu Exp $
 
 if (!isset($GLOBALS['mlModuleConfig'])) {
     global $xoopsModule, $xoopsModuleConfig;
@@ -13,7 +13,7 @@ if (!isset($GLOBALS['mlModuleConfig'])) {
 	$config_handler =& xoops_gethandler('config');
 	$GLOBALS['mlModuleConfig'] =& $config_handler->getConfigsByCat(0, $module->getVar('mid'));
     }
-    define('_VIDEO_EXT', '/\.(avi|mov|wmv|mpe?[g4]|mkv|ogm)$/i');
+    define('_VIDEO_EXT', '/\.(avi|mov|wmv|mpe?[g4]|mkv|ogm|flv)$/i');
     define('_IMAGE_EXT', '/\.(jpe?g|png|gif)$/i');
 }
 
