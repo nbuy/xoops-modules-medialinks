@@ -1,6 +1,6 @@
 <?php
 # medialinks common functions
-# $Id: functions.php,v 1.10 2007/12/28 08:39:08 nobu Exp $
+# $Id: functions.php,v 1.11 2007/12/28 14:47:46 nobu Exp $
 
 include_once XOOPS_ROOT_PATH.'/class/xoopsformloader.php';
 include_once "perm.php";
@@ -93,9 +93,15 @@ class KeyWords {
 
     function getPriKeysID() {
 	$keys =& $this->getKeys(0, $this->keys[0]['child']);
-	$ids = array();
+	$ids = array();		// get depth first order
+	$n = 0;
 	foreach ($keys as $key) {
-	    $ids[] = $key['keyid'];
+	    $id = $key['keyid'];
+	    if ($key['level']) array_splice($ids, $n, 0, $id);
+	    else {
+		$ids[] = $id;
+		$n = count($n)-1;
+	    }
 	}
 	return $ids;
     }
