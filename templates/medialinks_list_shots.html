@@ -6,11 +6,14 @@
     <tr>
       <td style="width:170px;">
 	<div style="font-size: small;" class="info">
-	  <{$line.cdate}>
+	  <{if $block.order=="hits"}><{$line.hits}> hits
+	  <{elseif $block.order=="mtime"}><{$line.mdate}>
+	  <{else}><{$line.cdate}>
+	  <{/if}>
 	  <{if $line.keywords}>
 [<{foreach from=$line.keywords item=kname name=keys}><{if !$smarty.foreach.keys.first}>, <{/if}><{$kname}><{/foreach}>]
 	  <{/if}>
-    by <a href="<{$xoops_url}>/userinfo.php?uid=<{$line.poster}>"><{$line.uname}></a><{* <{$line.hits}>hits *}>
+    by <a href="<{$xoops_url}>/userinfo.php?uid=<{$line.poster}>"><{$line.uname}></a>
 	</div>
 	<div style="height:2.5em;" class="desc"><{$line.shortdesc}></div>
       </td>
