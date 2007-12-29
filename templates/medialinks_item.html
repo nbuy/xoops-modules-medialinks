@@ -23,7 +23,7 @@
 type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" 
 flashvars="file=<{$link.url}>&displayheight=240" />
   <{elseif preg_match("/\\.(jpe?g|png|gif)\$/i", $link.url)}>
-  <a href="track.php?lid=<{$link.linkid}>" target="_blank"><img src="<{$link.url}>" width="320" alt="<{$link.name}>" /></a>
+  <a href="track.php?lid=<{$link.linkid}>" target="_blank"><img src="<{if $link.shotimg}><{$link.shotimg}><{else}><{$link.url}><{/if}>" width="320" alt="<{$link.name}>" /></a>
   <{else}>
    ??? <{$link.url}>
   <{/if}>

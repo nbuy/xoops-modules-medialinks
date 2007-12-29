@@ -1,12 +1,12 @@
 <?php
 # make video screenshot/thumbnail image
-# $Id: screenshot.php,v 1.2 2007/12/28 08:39:08 nobu Exp $
+# $Id: screenshot.php,v 1.3 2007/12/29 08:51:43 nobu Exp $
 
 require_once dirname(__FILE__)."/perm.php";
 
 function ml_screenshot($mid) {
     global $ml_shotopts;
-    $path = get_upload_path($mid, "00-shot.jpg");
+    $path = get_upload_path($mid, _ML_SHOTNAME);
     if (!file_exists($path)) {
 	global $xoopsDB;
 	$res = $xoopsDB->query("SELECT url FROM ".$xoopsDB->prefix('medialinks_attach')." WHERE midref=$mid AND ltype='m' ORDER BY weight,linkid", 1);
@@ -40,6 +40,6 @@ function ml_screenshot($mid) {
 	return XOOPS_URL."/modules/$mydirname/images/nodata.png";
     }
     if (!empty($temp) && file_exists($temp)) unlink($temp);
-    return get_upload_url($mid, "00-shot.jpg");
+    return get_upload_url($mid, _ML_SHOTNAME);
 }
 ?>

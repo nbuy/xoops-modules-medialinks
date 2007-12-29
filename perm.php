@@ -1,6 +1,6 @@
 <?php
 # check permition for edit
-# $Id: perm.php,v 1.2 2007/12/28 08:39:08 nobu Exp $
+# $Id: perm.php,v 1.3 2007/12/29 08:51:43 nobu Exp $
 
 if (!isset($GLOBALS['mlModuleConfig'])) {
     global $xoopsModule, $xoopsModuleConfig;
@@ -15,6 +15,7 @@ if (!isset($GLOBALS['mlModuleConfig'])) {
     }
     define('_VIDEO_EXT', '/\.(avi|mov|wmv|mpe?[g4]|mkv|ogm|flv)$/i');
     define('_IMAGE_EXT', '/\.(jpe?g|png|gif)$/i');
+    define('_ML_SHOTNAME', '00-shot.jpg');
 }
 
 function check_groups($prop) {

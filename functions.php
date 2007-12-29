@@ -1,6 +1,6 @@
 <?php
 # medialinks common functions
-# $Id: functions.php,v 1.11 2007/12/28 14:47:46 nobu Exp $
+# $Id: functions.php,v 1.12 2007/12/29 08:51:43 nobu Exp $
 
 include_once XOOPS_ROOT_PATH.'/class/xoopsformloader.php';
 include_once "perm.php";
@@ -472,6 +472,10 @@ class MediaContent {
 	    if ($exp) {
 		if (empty($data['name'])) $data['name']=basename($data['url']);
 		$data['url'] = get_upload_url($mid, $data['url']);
+		if ($type=='m' && count($attach)==0 &&
+		    file_exists(get_upload_path($mid, _ML_SHOTNAME))) {
+		    $data['shotimg'] = get_upload_url($mid, _ML_SHOTNAME);
+		}
 	    }
 	    if (strtolower($data['ltype']) == $type) $attach[] = $data;
 	}
