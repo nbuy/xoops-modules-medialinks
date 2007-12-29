@@ -1,6 +1,6 @@
 <?php
 # medialinks module information
-# $Id: modinfo.php,v 1.4 2007/12/28 08:39:08 nobu Exp $
+# $Id: modinfo.php,v 1.5 2007/12/29 07:08:35 nobu Exp $
 
 define("_MI_MEDIALINKS_NAME", "Media Contents");
 define("_MI_MEDIALINKS_DESC", "Display Media Contents And additional information");
@@ -25,6 +25,7 @@ define("_MI_MEDIALINKS_LIST_TPL", "Multiple contents display");
 define("_MI_MEDIALINKS_LISTSHOTS_TPL", "List with screenshots");
 define("_MI_MEDIALINKS_OPERATE_TPL", "Maniplate a contents");
 define("_MI_MEDIALINKS_UPLOADS_TPL", "Upload Panel");
+define("_MI_MEDIALINKS_COMMENT_TPL", "External comment template (d3forum)");
 define("_MI_MEDIALINKS_RSS_TPL", "RSS style (for iTunes)");
 define("_MI_MEDIALINKS_ASX_TPL", "for WMV(AVI) style application link");
 define("_MI_MEDIALINKS_QTL_TPL", "QuickTime style application link");
