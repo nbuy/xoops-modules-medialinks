@@ -1,6 +1,6 @@
 <?php
 # Medialinks - blocksupport
-# $Id: medialinks_block.php,v 1.7 2007/12/28 08:39:08 nobu Exp $
+# $Id: medialinks_block.php,v 1.8 2007/12/29 06:54:52 nobu Exp $
 
 include_once dirname(dirname(__FILE__))."/functions.php";
 // options: [0] order, [1] lines, [2] strlen
@@ -8,7 +8,7 @@ include_once dirname(dirname(__FILE__))."/functions.php";
 function b_medialinks_show($options) {
     $style = $options[4];
     if ($style == 3) $style = $GLOBALS['mlModuleConfig']['list_style'];
-    return ml_index_view($options[0]." DESC", $options[2], $options[3], $style, $options[1], 0, _BLOCK_MEDIALINKS_DFMT);
+    return ml_index_view($options[0]." DESC", $options[2], $options[3], $style, $options[1], 0, $style==2?"s":_BLOCK_MEDIALINKS_DFMT);
 }
 
 function b_ml_select($name, $opts, $def) {

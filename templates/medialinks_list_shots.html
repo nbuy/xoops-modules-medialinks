@@ -1,18 +1,18 @@
 <{foreach from=$media.contents item=line key=n}>
 <{* ============== screenshots style ============== *}>
   <table style="display:inline" class="medialink_shots">
-    <tr><td align="center"><a href="<{$media.module_url}>/detail.php?mid=<{$line.mid}>"><img src="<{$line.image}>" width="160" /></a></td></tr>
+    <tr><td align="center"><a href="<{$media.module_url}>/detail.php?mid=<{$line.mid}>"><img src="<{$line.image}>" style="width:160px;" /></a></td></tr>
     <tr><th><{$line.title}></th></tr>
     <tr>
-      <td width="170">
+      <td style="width:170px;">
 	<div style="font-size: small;" class="info">
 	  <{$line.cdate}>
 	  <{if $line.keywords}>
 [<{foreach from=$line.keywords item=kname name=keys}><{if !$smarty.foreach.keys.first}>, <{/if}><{$kname}><{/foreach}>]
 	  <{/if}>
-    by <a href="<{$xoops_url}>/userinfo.php?uid=<{$line.poster}>"><{$line.uname}></a> <{$line.hits}>hits
+    by <a href="<{$xoops_url}>/userinfo.php?uid=<{$line.poster}>"><{$line.uname}></a><{* <{$line.hits}>hits *}>
 	</div>
-	<div style="height:2em;" class="desc"><{$line.shortdesc}></div>
+	<div style="height:2.5em;" class="desc"><{$line.shortdesc}></div>
       </td>
     </tr>
   </table>
