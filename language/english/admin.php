@@ -1,6 +1,6 @@
 <?php
 # medialinks admin language resources
-# $Id: admin.php,v 1.3 2007/11/24 09:49:14 nobu Exp $
+# $Id: admin.php,v 1.4 2008/01/17 09:13:14 nobu Exp $
 
 define("_AM_CONTENTS_ADMIN", "Media Contents Management");
 define("_AM_CONTENTS_DEL", "Delete contents");
@@ -62,7 +62,7 @@ define("_AM_TYPE_TEXT", "Text");
 define("_AM_TYPE_KEYWORD", "Keyword");
 define("_AM_TYPE_LINK", "Link");
 
-global $nodetypes, $status_sel;
+global $nodetypes_select, $status_sel;
 
 $nodetypes_select =
     array(0=>_AM_NODE_BOTH,
