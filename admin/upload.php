@@ -1,6 +1,6 @@
 <?php
 # uploads folder maintainace
-# $Id: upload.php,v 1.2 2007/11/25 06:30:54 nobu Exp $
+# $Id: upload.php,v 1.3 2009/12/13 11:25:00 nobu Exp $
 
 include '../../../include/cp_header.php';
 
@@ -33,14 +33,14 @@ if (isset($_POST['dels'])) {
 } elseif (isset($_POST['upfile'])) {
     upload_store();
 } elseif (isset($_POST['mkdir'])) {
-    $dir = $myts->stripSlashesGPC($_POST['dir']);
-    $newdir = "$dir/".$myts->stripSlashesGPC($_POST['mkdir']);
+    $dir = filename_filter($myts->stripSlashesGPC($_POST['dir']));
+    $newdir = filename_filter("$dir/".$myts->stripSlashesGPC($_POST['mkdir']));
     mkdir(UPLOAD_BASE.$newdir);
     location_folder($dir);
 } elseif (isset($_POST['move'])) {
     $old = $myts->stripSlashesGPC($_POST['file']);
-    $new = preg_replace('/\/*$/','',$myts->stripSlashesGPC($_POST['dir'])).'/'.
-	$myts->stripSlashesGPC($_POST['new']);
+    $new = preg_replace('/\/*$/','',filename_filter($myts->stripSlashesGPC($_POST['dir'])).'/'.
+	$myts->stripSlashesGPC($_POST['new']));
     $dir = dirname($old);
     if (file_exists(UPLOAD_BASE.$new)) {
 	redirect_header(location_folder($dir,false), 3, _AM_FILE_DUP_ERROR);
@@ -62,10 +62,10 @@ echo "<h2>"._AM_UPLOAD_TITLE."</h2>";
 $sysfile = array('/blank.gif','/index.html');
 
 if (isset($_GET['ren'])) {
-    $file = $myts->stripSlashesGPC($_GET['ren']);
+    $file = filename_filter($myts->stripSlashesGPC($_GET['ren']));
     rename_form($file);
 } else {
-    $dir = isset($_GET['dir'])?$myts->stripSlashesGPC($_GET['dir']):'';
+    $dir = isset($_GET['dir'])?filename_filter($myts->stripSlashesGPC($_GET['dir'])):'';
     if (!is_dir(UPLOAD_BASE)) mkdir(UPLOAD_BASE);
     folder_list($dir);
     upload_form($dir);
@@ -235,7 +235,7 @@ function upload_form($dir="") {
 
 function upload_store() {
     global $myts;
-    $dir = isset($_POST['dir'])?$myts->stripSlashesGPC($_POST['dir']):"";
+    $dir = isset($_POST['dir'])?filename_filter($myts->stripSlashesGPC($_POST['dir'])):"";
     $expand = isset($_POST['expand'])?intval($_POST['expand']):0;
     foreach($_FILES as $file) {
 	$name = $file['name'];
@@ -297,8 +297,12 @@ function rename_form($file) {
     echo "</fieldset>\n";
 }
 
-function domname_filter($sub) {
-    return preg_replace('/[^a-z0-9\_\-]/', '_', strtolower($sub));
+function filename_filter($name) {
+    // remove injection garbage
+    $pat = array('@/\\.\\.?|\\.\\.?/|[^\\w\d~/\_\-\.\#\x80-\xff]@','/\/+/');
+    $rep = array('', '/');
+    echo "<div>$name: ".preg_replace($pat,$rep,$name)."</div>";
+    return preg_replace($pat,$rep,$name);
 }
 
 function find_dir($dir='') {

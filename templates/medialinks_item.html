@@ -21,7 +21,7 @@
   <{elseif preg_match("/\\.flv\$/i", $link.url)}>
   <embed src="flvplayer.swf" width="320" height="256" 
 type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" 
-flashvars="file=<{$link.url}>&displayheight=240" />
+flashvars="file=<{$link.url}>&image=<{$link.url|regex_replace:'/[^\/]+$/':'00-shot.jpg'}>&displayheight=240" />
   <{elseif preg_match("/\\.(jpe?g|png|gif)\$/i", $link.url)}>
   <a href="track.php?lid=<{$link.linkid}>" target="_blank"><img src="<{if $link.shotimg}><{$link.shotimg}><{else}><{$link.url}><{/if}>" width="320" alt="<{$link.name}>" /></a>
   <{else}>

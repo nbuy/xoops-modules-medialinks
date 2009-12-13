@@ -1,6 +1,6 @@
 <?php
 # medialinks module information
-# $Id: modinfo.php,v 1.6 2007/12/29 07:13:29 nobu Exp $
+# $Id: modinfo.php,v 1.7 2009/12/13 11:25:00 nobu Exp $
 
 define("_MI_MEDIALINKS_NAME", "Media Contents");
 define("_MI_MEDIALINKS_DESC", "Display Media Contents And additional information");

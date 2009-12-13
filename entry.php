@@ -1,6 +1,6 @@
 <?php
 # Medialinks - contents page entry and edit
-# $Id: entry.php,v 1.5 2007/11/24 09:49:13 nobu Exp $
+# $Id: entry.php,v 1.6 2009/12/13 11:24:59 nobu Exp $
 
 include "../../mainfile.php";
 include_once "functions.php";
@@ -69,8 +69,9 @@ if (isset($_POST['save'])) {
     exit;
 }
 
-include XOOPS_ROOT_PATH."/header.php";
 $xoopsOption['template_main'] = 'medialinks_entry.html';
+
+include XOOPS_ROOT_PATH."/header.php";
 
 // calender JavaScript setup
 if (isset($weekname)) $xoopsTpl->assign('weekname', $weekname);
@@ -106,14 +107,16 @@ keywords_widget($keywidget, $relays, $roots);
 
 function squote($x) { return '"'.addslashes($x).'"'; }
 $dests = array();
-foreach ($relays as $k => $v) {
-    $rk = find_root_id($v['keyid']);
-    $rt = $v['root'];
-    if (empty($dests[$rk])) $dests[$rk] = array($rt);
-    else if (!in_array($rt, $dests[$rk])) $dests[$rk][] = $rt;
+if ($relays) {
+    foreach ($relays as $k => $v) {
+	$rk = find_root_id($v['keyid']);
+	$rt = $v['root'];
+	if (empty($dests[$rk])) $dests[$rk] = array($rt);
+	else if (!in_array($rt, $dests[$rk])) $dests[$rk][] = $rt;
     
-    $relays[$k]['values'] = "new Array(".join(',', $v['values']).")";
-    $relays[$k]['labels'] = "new Array(".join(',', array_map('squote', $v['labels'])).")";
+	$relays[$k]['values'] = "new Array(".join(',', $v['values']).")";
+	$relays[$k]['labels'] = "new Array(".join(',', array_map('squote', $v['labels'])).")";
+    }
 }
 foreach ($dests as $k => $v) {
     $dests[$k] = "new Array(".join(',',$v).",0)";

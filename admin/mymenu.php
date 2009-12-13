@@ -23,7 +23,8 @@ if( file_exists( "$mydirpath/language/$language/modinfo.php" ) ) {
 
 include dirname(__FILE__).'/menu.php' ;
 
-if( file_exists( XOOPS_TRUST_PATH.'/libs/altsys/mytplsadmin.php' ) ) {
+$use_altsys = file_exists( XOOPS_TRUST_PATH.'/libs/altsys/mytplsadmin.php' ) ;
+if( $use_altsys ) {
 	// mytplsadmin (TODO check if this module has tplfile)
 	$title = defined( '_MD_A_MYMENU_MYTPLSADMIN' ) ? _MD_A_MYMENU_MYTPLSADMIN : 'tplsadmin' ;
 	array_push( $adminmenu , array( 'title' => $title , 'link' => 'admin/index.php?mode=admin&lib=altsys&page=mytplsadmin' ) ) ;
@@ -42,8 +43,10 @@ if( count( $config_handler->getConfigs( new Criteria( 'conf_modid' , $xoopsModul
 		// mypreferences
 		$title = defined( '_MD_A_MYMENU_MYPREFERENCES' ) ? _MD_A_MYMENU_MYPREFERENCES : _PREFERENCES ;
 		array_push( $adminmenu , array( 'title' => $title , 'link' => 'admin/index.php?mode=admin&lib=altsys&page=mypreferences' ) ) ;
-	} else {
+	} elseif (defined('XOOPS_CUBE_LEGACY')) {
 		// system->preferences
+		array_push( $adminmenu , array( 'title' => _PREFERENCES , 'link' => XOOPS_URL.'/modules/legacy/admin/index.php?action=PreferenceEdit&confmod_id='.$xoopsModule->mid() ) ) ;
+	} else {
 		array_push( $adminmenu , array( 'title' => _PREFERENCES , 'link' => XOOPS_URL.'/modules/system/admin.php?fct=preferences&op=showmod&mod='.$xoopsModule->mid() ) ) ;
 	}
 }
@@ -53,22 +56,26 @@ $mymenu_link = substr( strstr( $mymenu_uri , '/admin/' ) , 1 ) ;
 
 
 
-// highlight (you can customize the colors)
+// highlight
 foreach( array_keys( $adminmenu ) as $i ) {
 	if( $mymenu_link == $adminmenu[$i]['link'] ) {
-		$adminmenu[$i]['color'] = '#FFCCCC' ;
+		$adminmenu[$i]['selected'] = true ;
 		$adminmenu_hilighted = true ;
 		$GLOBALS['altsysAdminPageTitle'] = $adminmenu[$i]['title'] ;
 	} else {
-		$adminmenu[$i]['color'] = '#DDDDDD' ;
+		$adminmenu[$i]['selected'] = false ;
 	}
 }
 if( empty( $adminmenu_hilighted ) ) {
+	$maxlen = 0;
 	foreach( array_keys( $adminmenu ) as $i ) {
-		if( stristr( $mymenu_uri , $adminmenu[$i]['link'] ) ) {
-			$adminmenu[$i]['color'] = '#FFCCCC' ;
+		$link = $adminmenu[$i]['link'];
+		if( $maxlen < strlen($link) && stristr( $mymenu_uri , $link )) {
+			if ($maxlen) $last = false;
+			$maxlen = strlen($link);
+			$adminmenu[$i]['selected'] = true;
+			$last = &$adminmenu[$i]['selected'];
 			$GLOBALS['altsysAdminPageTitle'] = $adminmenu[$i]['title'] ;
-			break ;
 		}
 	}
 }
@@ -80,11 +87,27 @@ foreach( array_keys( $adminmenu ) as $i ) {
 	}
 }
 
-// display (you can customize htmls)
-echo "<div style='text-align:left;width:98%;'>" ;
-foreach( $adminmenu as $menuitem ) {
-	echo "<div style='float:left;height:1.5em;'><nobr><a href='".htmlspecialchars($menuitem['link'],ENT_QUOTES)."' style='background-color:{$menuitem['color']};font:normal normal bold 9pt/12pt;'>".htmlspecialchars($menuitem['title'],ENT_QUOTES)."</a> | </nobr></div>\n" ;
+if ( $use_altsys ) {
+    // display
+    require_once XOOPS_TRUST_PATH.'/libs/altsys/class/D3Tpl.class.php' ;
+    $tpl =& new D3Tpl() ;
+    $tpl->assign( array(
+			'adminmenu' => $adminmenu ,
+			) ) ;
+    $tpl->display( 'db:altsys_inc_mymenu.html' ) ;
+
+    // submenu
+    $page = preg_replace( '/[^0-9a-zA-Z_-]/' , '' , @$_GET['page'] ) ;
+    if( file_exists( dirname(__FILE__).'/mymenusub/'.$page.'.php' ) ) {
+	include dirname(__FILE__).'/mymenusub/'.$page.'.php' ;
+    }
+} else {
+	// display (you can customize htmls)
+	echo "<div style='text-align:left;width:98%;'>" ;
+	foreach( $adminmenu as $menuitem ) {
+		echo "<div style='float:left;height:1.5em;'><nobr><a href='".htmlspecialchars($menuitem['link'],ENT_QUOTES)."' style='background-color:".($menuitem['selected']?"#FFCCCC":"#DDDDDD").";font:normal normal bold 9pt/12pt;'>".htmlspecialchars($menuitem['title'],ENT_QUOTES)."</a> | </nobr></div>\n" ;
+	}
+	echo "</div>\n<hr style='clear:left;display:block;' />\n" ;
 }
-echo "</div>\n<hr style='clear:left;display:block;' />\n" ;
 
 ?>
